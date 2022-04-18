@@ -12,5 +12,6 @@ int main(){
     Employee e3(5,500,5);
     tree.insert(e3);
     tree.insert(e1);
+    tree.insert(e2);
     return 0;
 }

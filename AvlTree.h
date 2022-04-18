@@ -39,6 +39,8 @@ public:
 
     Node<T> *RemoveNode(int NodeID);
 
+    Node<T> * RightRotate (Node<T> * parent);
+
     Node<T> *LLRotate(Node<T> *parent);
 
     Node<T> *RRRotate(Node<T> *parent);
@@ -67,6 +69,7 @@ int calcBF(Node<T> *node) {
     } else if (node->right_son) {
         return node->right_son->height;
     }
+    else return 0;
 };
 
 
@@ -80,10 +83,10 @@ template<class T>
 Node<T> *createNode(const T &obj) {
     Node<T> *node = new Node<T>();
     //node->obj = shared_ptr<T>(&obj);
-    node->ID = obj.ID;
+    node->ID = obj.getID();
     node->left_son = NULL;
     node->right_son = NULL;
-    node->height = 0;
+    node->height = -1;
     return node;
 }
 
@@ -92,29 +95,6 @@ void AvlTree<T>::insert(const T &obj) {
     root = addNode(root, obj);
 }
 
-//ROTATE - IMPORTANT TO ADD
-template<class T>
-Node<T> *AvlTree<T>::addNode(Node<T> *node, const T &obj) {
-    if (node==NULL) {
-        node = createNode(obj);
-    } else if (obj.getID() > node->ID) {
-        node->right_son = addNode(node->right_son, obj);
-    } else if (obj.getID() < node->ID) {
-        node->left_son = addNode(node->left_son, obj);
-    }
-
-    //illegal, node already exist
-    else {
-        return node;
-    }
-
-
-//update height
-    node->height = max(calcHeight(node->left_son), calcHeight(node->right_son))+1;
-
-    return node;
-
-}
 
 template<class T>
 Node<T> *AvlTree<T>::RemoveNode(int NodeID) {
@@ -128,7 +108,7 @@ Node<T> *AvlTree<T>::RemoveNode(int NodeID) {
 
 template<class T>
 int AvlTree<T>::calcHeight(Node<T> *node) {
-    if(!node) return 0;
+    if(!node) return -1;
     if (node->left_son && node->right_son) {
         return max(node->left_son->height, node->right_son->height);
     } else if (node->left_son) {
@@ -136,6 +116,48 @@ int AvlTree<T>::calcHeight(Node<T> *node) {
     } else if (node->right_son) {
         return node->right_son->height;
     }
+    return -1;
 }
+
+//ROTATE - IMPORTANT TO ADD
+template<class T>
+Node<T> *AvlTree<T>::addNode(Node<T> *node, const T &obj) {
+    if (node==NULL) {
+        node = createNode(obj);
+    }
+
+    else if (obj.getID() > node->ID) {
+        node->right_son = addNode(node->right_son, obj);
+        if (calcBF(node)==2){
+
+        }
+        else if(calcBF(node)==-2){
+
+        }
+    }
+
+    else if (obj.getID() < node->ID) {
+        node->left_son = addNode(node->left_son, obj);
+    }
+
+        //illegal, node already exist
+    else {
+        return node;
+    }
+
+
+//update height
+    node->height = max(calcHeight(node->left_son), calcHeight(node->right_son))+1;
+
+    return node;
+
+}
+
+
+template<class T>
+Node<T> * AvlTree<T>:: RightRotate(Node<T> * parent){
+
+}
+
 
 #endif
