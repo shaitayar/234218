@@ -7,7 +7,7 @@
 
 
 class EmployeeManager {
-    AvlTree<shared_ptr<Company> > companies;
+    AvlTree <shared_ptr<Company> > companies;
 
 
 public:

@@ -19,8 +19,8 @@ public:
     int getId() const;
     int getValue() const;
     void setValue(int value);
-    AvlStatus addEmployee(const Employee&);
-    AvlStatus RemoveEmployee(int employeeID);
+    StatusType addEmployee(const Employee&);
+    StatusType RemoveEmployee(int employeeID);
 
 };
 
