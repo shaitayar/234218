@@ -1,6 +1,6 @@
 #include "company.h"
 
-int Company::getId() const{
+int Company::getID() const{
     return this->ID;
 }
 

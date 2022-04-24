@@ -11,16 +11,17 @@ using std::string;
 class Company{
     int ID;
     int value;
-    AvlTree<shared_ptr<Employee> > employees;
+    AvlTree <shared_ptr<Employee> > employees;
 
 public:
     Company(int ID, int value): ID(ID), value(value){};
     ~Company()=default;
-    int getId() const;
+    int getID() const;
     int getValue() const;
     void setValue(int value);
-    StatusType addEmployee(const Employee&);
+    StatusType addEmployee(Employee&);
     StatusType RemoveEmployee(int employeeID);
+
 
 };
 

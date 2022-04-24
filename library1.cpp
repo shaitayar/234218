@@ -24,7 +24,22 @@ void * Init(){
  * @return StatusType
  */
 StatusType AddEmployee(void *DS, int EmployeeID, int CompanyID, int Salary, int Grade){
-    if (DS==NULL) return INVALID_INPUT;
+    if (DS==NULL || EmployeeID<=0 || CompanyID<=0 || Grade<0) return INVALID_INPUT;
+    return ((EmployeeManager*)DS)->AddEmployee(EmployeeID, CompanyID, Salary, Grade);
+
+}
+
+/***
+ * RemoveEmployee -
+ * @param DS- pointer to Data Structure
+ * @param EmployeeID- ID for the new employee.
+ *
+ * @return StatusType
+ */
+StatusType RemoveEmployee(void *DS, int EmployeeID){
+    if(DS==NULL || EmployeeID<=0) return INVALID_INPUT;
+    return ((EmployeeManager*)DS)->RemoveEmployee(EmployeeID);
+
 
 }
 
