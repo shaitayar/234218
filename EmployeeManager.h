@@ -8,15 +8,15 @@
 
 
 class EmployeeManager {
-    AvlTree <Employee*, ID> employee_by_id;
-    AvlTree <Employee*, Salary> employee_by_salary;
-    AvlTree <Company*, ID> company_by_id;
-    AvlTree <Company*, ID> company_not_empty_by_id;
+    AvlTree <Employee*, CompEmployeeById> employee_by_id;
+    AvlTree <Employee*, CompEmployeeBySalary> employee_by_salary;
+    AvlTree <Company*, CompCompanyById> company_by_id;
 
 
 
 public:
-    EmployeeManager();
+    EmployeeManager(): employee_by_id(CompEmployeeById()), employee_by_salary(CompEmployeeBySalary()),
+                       company_by_id(CompCompanyById()){};
 
     StatusType AddCompany(int CompanyID, int Value);
 

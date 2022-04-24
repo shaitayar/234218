@@ -1,17 +1,21 @@
 #ifndef INC_234218_EMPLOYEE_H
 #define INC_234218_EMPLOYEE_H
-
+#include <memory>
 #include <iostream>
 using std::string;
 using std::ostream;
+using std::shared_ptr;
+
+class Company;
 
 class Employee{
     int ID;
     int salary;
     int grade;
+    shared_ptr<Company>  p_company;
 
 public:
-    Employee(int ID, int salary, int grade): ID(ID), salary(salary), grade(grade){};
+    Employee(int ID, int salary, int grade);
     ~Employee()=default;
     int getID() const;
     int getSalary() const;
@@ -38,5 +42,17 @@ public:
     }
 */
 };
+
+class CompEmployeeBySalary{
+public:
+    int operator()(Employee * e1, Employee * e2) const{
+        int s1 = e1->getSalary();
+        int s2 = e2->getSalary();
+        if (s1 >= s2) return 1;
+        else return -1;
+    }
+};
+
+
 
 #endif

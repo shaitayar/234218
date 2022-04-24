@@ -4,21 +4,13 @@
 #include <iostream>
 #include <memory>
 
-typedef enum {
-    SUCCESS = 0,
-    FAILURE = -1,
-    ALLOCATION_ERROR = -2,
-    INVALID_INPUT = -3
-} StatusType;
-
-
 using std::ostream;
 using std::shared_ptr;
-
+/*
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
-
+*/
 
 template<class T, class L>
 struct Node {
@@ -35,7 +27,7 @@ class AvlTree {
 
     L compare;
 
-    Node<T, L> *addNode(Node<T, L> *node, T *obj, StatusType *status);
+    Node<T, L> *addNode(Node<T, L> *node, T *obj);
 
     Node<T, L> *RightRotate(Node<T, L> *r);
 
@@ -49,7 +41,7 @@ public:
 
     int calcHeight(Node<T, L> *node);
 
-    void insert(T *obj, StatusType *status);
+    void insert(T *obj);
 
     Node<T, L> *RemoveNode(int NodeID);
 
@@ -103,9 +95,8 @@ Node<T,L> *createNode(T *obj) {
 }
 
 template<class T, class L>
-void AvlTree<T, L>::insert(T *obj, StatusType *status) {
-    status = (StatusType *) SUCCESS;
-    root = addNode(root, obj, status);
+void AvlTree<T, L>::insert(T *obj) {
+    root = addNode(root, obj);
 }
 
 
@@ -126,20 +117,19 @@ int AvlTree<T, L>::calcHeight(Node<T, L> *node) {
 }
 
 template<class T, class L>
-Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj, StatusType *status) {
+Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj) {
     if (node == NULL) {
         node = createNode<T,L>(obj);
     } else if (compare(obj, node->obj) > 0) {
-        node->right_son = addNode(node->right_son, obj, status);
+        node->right_son = addNode(node->right_son, obj);
         (node->right_son)->father = node;
     } else if (compare(obj, node->obj) < 0) {
-        node->left_son = addNode(node->left_son, obj, status);
+        node->left_son = addNode(node->left_son, obj);
         (node->left_son)->father = node;
     }
 
         //illegal, node already exist
     else {
-        *status = FAILURE;
         return node;
     }
 
