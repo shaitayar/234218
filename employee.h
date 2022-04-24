@@ -9,15 +9,13 @@ class Employee{
     int ID;
     int salary;
     int grade;
-    int CompanyID;
 
 public:
-    Employee(int ID, int salary, int grade, int CompanyID): ID(ID), salary(salary), grade(grade),CompanyID(CompanyID){};
+    Employee(int ID, int salary, int grade): ID(ID), salary(salary), grade(grade){};
     ~Employee()=default;
     int getID() const;
     int getSalary() const;
     int getGrade() const;
-    int getCompany() const;
 
     //Maybe add setters
 };

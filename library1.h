@@ -37,7 +37,7 @@ StatusType AddCompany(void *DS, int CompanyID, int Value);
 
 StatusType AddEmployee(void *DS, int EmployeeID, int CompanyID, int Salary, int Grade);
 
-//StatusType RemoveCompany(void *DS, int CompanyID);
+StatusType RemoveCompany(void *DS, int CompanyID);
 
 StatusType RemoveEmployee(void *DS, int EmployeeID);
 /*
