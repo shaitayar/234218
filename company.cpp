@@ -11,5 +11,3 @@ int Company::getValue() const{
 void Company::setValue(int new_value) {
     this->value=new_value;
 }
-
-blabla
