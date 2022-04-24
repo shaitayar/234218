@@ -34,7 +34,7 @@ public:
 
     AvlTree(L compare) : compare(compare), root(NULL) {};
 
-    ~AvlTree() = default;
+    ~AvlTree();
 
     int calcHeight(Node<T, L> *node);
 

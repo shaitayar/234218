@@ -4,26 +4,20 @@ using std::exception;
 
 StatusType EmployeeManager::AddCompany(int CompanyID, int Value){
     Company * company = new Company(CompanyID, Value);
-    try{
-        company_by_id.insert(company);
-    }
-    catch (exception& e) {
+    if(company_by_id.find(CompanyID)!=NULL) return FAILURE;
+    company_by_id.insert(company);
 
-    }
     return SUCCESS;
 }
 
 StatusType EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade){
     Node<Company , CompCompanyById> * c = company_by_id.find(CompanyID);
     Employee * employee = new Employee(EmployeeID, Salary, Grade, shared_ptr<struct Company>((c->obj)));
-    try{
-        employee_by_id.insert(employee);
+    if (employee_by_id.find(EmployeeID)!=NULL){
+        return FAILURE;
     }
-    catch (exception& e) {
-
-    }
+    employee_by_id.insert(employee);
     employee_by_salary.insert(employee);
     (c->obj)->addEmployee(employee);
-
     return SUCCESS;
 }
