@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Employee::Employee(int ID, int salary, int grade): ID(ID), salary(salary), grade(grade) {
+Employee::Employee(int ID, int salary, int grade, Company * p_company): ID(ID), salary(salary), grade(grade), p_company() {
 
 }
 

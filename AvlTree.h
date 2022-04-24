@@ -54,12 +54,16 @@ public:
 
     Node<T, L> *RLRotate(Node<T, L> *r);
 
+    Node<T, L> * find(int NodeID);
+
     /***maybe needed with O(1)*/
     void preOrder() const;
 
     void inorder() const;
 
     void postOrder() const;
+
+    class AvlTreeException : public std::exception{};
 };
 
 /*** AVL Implementation */
