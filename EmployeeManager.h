@@ -8,21 +8,30 @@
 #include "exception"
 
 class EmployeeManager {
-    AvlTree <Employee*, CompEmployeeById> employee_by_id;
-    AvlTree <Employee*, CompEmployeeBySalary> employee_by_salary;
-    AvlTree <Company*, CompCompanyById> company_by_id;
+    CompEmployeeById ed;
+    CompEmployeeBySalary es;
+    CompCompanyById cd;
+    AvlTree <Employee, CompEmployeeById> employee_by_id;
+    AvlTree <Employee, CompEmployeeBySalary> employee_by_salary;
+    AvlTree <Company, CompCompanyById> company_by_id;
 
 
 
 public:
-    EmployeeManager(): employee_by_id(CompEmployeeById()), employee_by_salary(CompEmployeeBySalary()),
-                       company_by_id(CompCompanyById()){};
+    EmployeeManager():ed(), es(),cd(), employee_by_id(ed), employee_by_salary(es),
+                       company_by_id(cd){};
 
     StatusType AddCompany(int CompanyID, int Value);
 
     StatusType AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade);
 
     StatusType RemoveEmployee(int EmployeeID);
+
+    void print() const{
+        employee_by_salary.print();
+    }
+
 };
+
 
 #endif

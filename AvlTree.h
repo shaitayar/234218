@@ -2,16 +2,13 @@
 #define INC_234218_AVLTREE_H
 
 #include <iostream>
-#include <memory>
-
 using std::ostream;
-using std::shared_ptr;
+using std::max;
 /*
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
 */
-
 template<class T, class L>
 struct Node {
     T *obj;
@@ -35,7 +32,7 @@ class AvlTree {
 
 public:
 
-    AvlTree(L compare) : compare(compare), root(NULL){};
+    AvlTree(L compare) : compare(compare), root(NULL) {};
 
     ~AvlTree() = default;
 
@@ -54,16 +51,19 @@ public:
 
     Node<T, L> *RLRotate(Node<T, L> *r);
 
-    Node<T, L> * find(int NodeID);
+    Node<T, L> *find(int NodeID);
 
     /***maybe needed with O(1)*/
     void preOrder() const;
 
-    void inorder() const;
+    void print() const;
+
+    void inorder(Node<T,L> *) const;
 
     void postOrder() const;
 
-    class AvlTreeException : public std::exception{};
+    class AvlTreeException : public std::exception {
+    };
 };
 
 /*** AVL Implementation */
@@ -88,8 +88,8 @@ int is_balanced(Node<T, L> *current) {
 }
 
 template<class T, class L>
-Node<T,L> *createNode(T *obj) {
-    auto *node = new Node<T,L>();
+Node<T, L> *createNode(T *obj) {
+    auto *node = new Node<T, L>();
     node->obj = obj;
     node->father = NULL;
     node->left_son = NULL;
@@ -123,7 +123,7 @@ int AvlTree<T, L>::calcHeight(Node<T, L> *node) {
 template<class T, class L>
 Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj) {
     if (node == NULL) {
-        node = createNode<T,L>(obj);
+        node = createNode<T, L>(obj);
     } else if (compare(obj, node->obj) > 0) {
         node->right_son = addNode(node->right_son, obj);
         (node->right_son)->father = node;
@@ -175,7 +175,7 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     Node<T, L> *pb = r->left_son;
     Node<T, L> *pc = pb->right_son;
     if (r->father) {
-        if (compare(((r->father)->left_son)->obj, r->obj)==0) {
+        if (compare(((r->father)->left_son)->obj, r->obj) == 0) {
             r->father->left_son = pb;
         } else {
             r->father->right_son = pb;
@@ -188,7 +188,7 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     //update height
     pb->height = max(calcHeight(pb->left_son), calcHeight(pb->right_son)) + 1;
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
-    root->father=NULL;
+    root->father = NULL;
 
     return root;
 }
@@ -198,7 +198,7 @@ Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
     Node<T, L> *pb = r->right_son;
     Node<T, L> *pc = pb->left_son;
     if (r->father) {
-        if (compare(((r->father)->left_son)->obj, r->obj)==0) {
+        if (compare(((r->father)->left_son)->obj, r->obj) == 0) {
             r->father->left_son = pb;
         } else {
             r->father->right_son = pb;
@@ -211,7 +211,7 @@ Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
     //update height
     pb->height = max(calcHeight(pb->left_son), calcHeight(pb->right_son)) + 1;
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
-    root->father=NULL;
+    root->father = NULL;
     return root;
 }
 
@@ -225,6 +225,30 @@ template<class T, class L>
 Node<T, L> *AvlTree<T, L>::RLRotate(Node<T, L> *r) {
     RightRotate(r->right_son);
     return LeftRotate(r);
+}
+
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::find(int NodeID) {
+    Node<T, L> *iter = this->root;
+    while (iter&& compare(iter->obj,NodeID)){
+        if (compare(iter->obj,NodeID)>0){
+            iter = iter->left_son;
+        }
+        else iter = iter->right_son;
+    }
+    return iter;
+}
+template<class T, class L>
+void AvlTree<T, L>::inorder(Node<T,L> * p) const{
+    if (p==NULL) return;
+    inorder(p->left_son);
+    p->obj->print();
+    inorder(p->right_son);
+}
+
+template<class T, class L>
+void AvlTree<T, L>::print() const{
+    inorder(root);
 }
 
 

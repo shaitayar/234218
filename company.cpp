@@ -7,3 +7,7 @@ int Company::getID() const{
 int Company::getValue() const{
     return this->value;
 }
+
+void Company::addEmployee(Employee *e){
+
+}

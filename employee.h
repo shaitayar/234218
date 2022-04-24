@@ -15,12 +15,14 @@ class Employee{
     shared_ptr<Company>  p_company;
 
 public:
-    Employee(int ID, int salary, int grade);
+    Employee(int ID, int salary, int grade, shared_ptr<Company> p_company);
     ~Employee()=default;
     int getID() const;
     int getSalary() const;
     int getGrade() const;
-
+    void print() const{
+        std::cout<<getID()<<std::endl;
+    }
     //Maybe add setters
 };
 
@@ -33,14 +35,14 @@ public:
         else if (id1 < id2) return -1;
         else return 0;
     }
-/*
+
     int operator()(const Employee * e1, int id2) const{
         int id1 = e1->getID();
         if (id1 > id2) return 1;
         else if (id1 < id2) return -1;
         else return 0;
     }
-*/
+
 };
 
 class CompEmployeeBySalary{
