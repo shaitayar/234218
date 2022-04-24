@@ -3,12 +3,14 @@
 
 #include <iostream>
 #include <memory>
+
 typedef enum {
     SUCCESS = 0,
     FAILURE = -1,
     ALLOCATION_ERROR = -2,
     INVALID_INPUT = -3
 } StatusType;
+
 
 using std::ostream;
 using std::shared_ptr;
@@ -18,46 +20,47 @@ int max(int a, int b) {
 }
 
 
-template<class T>
+template<class T, class L>
 struct Node {
-    int ID;
-    const T * obj;
+    T *obj;
     Node *father;
     Node *left_son;
     Node *right_son;
     int height;
 };
 
-template<class T>
+template<class T, class L>
 class AvlTree {
-    Node<T> *root;
+    Node<T, L> *root;
 
-    Node<T> *addNode(Node<T> *node, const T &obj, StatusType * status);
+    L compare;
 
-    Node<T> *RightRotate(Node<T> *r);
+    Node<T, L> *addNode(Node<T, L> *node, T *obj, StatusType *status);
 
-    Node<T> *LeftRotate(Node<T> *r);
+    Node<T, L> *RightRotate(Node<T, L> *r);
+
+    Node<T, L> *LeftRotate(Node<T, L> *r);
 
 public:
 
-    AvlTree() : root(NULL) {};
+    AvlTree(L compare) : compare(compare), root(NULL){};
 
     ~AvlTree() = default;
 
-    int calcHeight(Node<T> *node);
+    int calcHeight(Node<T, L> *node);
 
-    void insert(const T &obj, StatusType * status);
+    void insert(T *obj, StatusType *status);
 
-    Node<T> *RemoveNode(int NodeID);
+    Node<T, L> *RemoveNode(int NodeID);
 
-    Node<T> *RRRotate(Node<T> *r);
+    Node<T, L> *RRRotate(Node<T, L> *r);
 
-    Node<T> *LLRotate(Node<T> *r);
+    Node<T, L> *LLRotate(Node<T, L> *r);
 
 
-    Node<T> *LRRotate(Node<T> *r);
+    Node<T, L> *LRRotate(Node<T, L> *r);
 
-    Node<T> *RLRotate(Node<T> *r);
+    Node<T, L> *RLRotate(Node<T, L> *r);
 
     /***maybe needed with O(1)*/
     void preOrder() const;
@@ -70,8 +73,8 @@ public:
 /*** AVL Implementation */
 
 
-template<class T>
-int calcBF(Node<T> *node) {
+template<class T, class L>
+int calcBF(Node<T, L> *node) {
     if (node->left_son && node->right_son) {
         return node->left_son->height - node->right_son->height;
     } else if (node->left_son) {
@@ -82,17 +85,16 @@ int calcBF(Node<T> *node) {
 };
 
 
-template<class T>
-int is_balanced(Node<T> *current) {
+template<class T, class L>
+int is_balanced(Node<T, L> *current) {
     int BF = calcBF(current);
     return (BF >= -1 && BF <= 1);
 }
 
-template<class T>
-Node<T> *createNode(const T &obj) {
-    Node<T> *node = new Node<T>();
-    node->obj = (&obj);
-    node->ID = obj.getID();
+template<class T, class L>
+Node<T,L> *createNode(T *obj) {
+    auto *node = new Node<T,L>();
+    node->obj = obj;
     node->father = NULL;
     node->left_son = NULL;
     node->right_son = NULL;
@@ -100,15 +102,15 @@ Node<T> *createNode(const T &obj) {
     return node;
 }
 
-template<class T>
-void AvlTree<T>::insert(const T &obj, StatusType * status) {
-    status =  (StatusType*)SUCCESS;
+template<class T, class L>
+void AvlTree<T, L>::insert(T *obj, StatusType *status) {
+    status = (StatusType *) SUCCESS;
     root = addNode(root, obj, status);
 }
 
 
-template<class T>
-Node<T> *AvlTree<T>::RemoveNode(int NodeID) {
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::RemoveNode(int NodeID) {
     //find node
 
     //remove
@@ -117,24 +119,22 @@ Node<T> *AvlTree<T>::RemoveNode(int NodeID) {
 }
 
 
-template<class T>
-int AvlTree<T>::calcHeight(Node<T> *node) {
+template<class T, class L>
+int AvlTree<T, L>::calcHeight(Node<T, L> *node) {
     if (!node) return -1;
     else return node->height;
 }
 
-//ROTATE - IMPORTANT TO ADD
-template<class T>
-Node<T> *AvlTree<T>::addNode(Node<T> *node, const T &obj, StatusType * status) {
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj, StatusType *status) {
     if (node == NULL) {
-        node = createNode(obj);
-    } else if (obj.getID() > node->ID) {
+        node = createNode<T,L>(obj);
+    } else if (compare(obj, node->obj) > 0) {
         node->right_son = addNode(node->right_son, obj, status);
         (node->right_son)->father = node;
-    } else if (obj.getID() < node->ID) {
+    } else if (compare(obj, node->obj) < 0) {
         node->left_son = addNode(node->left_son, obj, status);
         (node->left_son)->father = node;
-
     }
 
         //illegal, node already exist
@@ -142,7 +142,6 @@ Node<T> *AvlTree<T>::addNode(Node<T> *node, const T &obj, StatusType * status) {
         *status = FAILURE;
         return node;
     }
-
 
 //update height
     node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
@@ -166,23 +165,23 @@ Node<T> *AvlTree<T>::addNode(Node<T> *node, const T &obj, StatusType * status) {
 
 }
 
-template<class T>
-Node<T> *AvlTree<T>::RRRotate(Node<T> *r) {
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::RRRotate(Node<T, L> *r) {
     return LeftRotate(r);
 }
 
-template<class T>
-Node<T> *AvlTree<T>::LLRotate(Node<T> *r) {
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::LLRotate(Node<T, L> *r) {
     return RightRotate(r);
 }
 
 
-template<class T>
-Node<T> *AvlTree<T>::RightRotate(Node<T> *r) {
-    Node<T> *pb = r->left_son;
-    Node<T> *pc = pb->right_son;
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
+    Node<T, L> *pb = r->left_son;
+    Node<T, L> *pc = pb->right_son;
     if (r->father) {
-        if (((r->father)->left_son)->ID == r->ID) {
+        if (compare(((r->father)->left_son)->obj, r->obj)==0) {
             r->father->left_son = pb;
         } else {
             r->father->right_son = pb;
@@ -195,16 +194,17 @@ Node<T> *AvlTree<T>::RightRotate(Node<T> *r) {
     //update height
     pb->height = max(calcHeight(pb->left_son), calcHeight(pb->right_son)) + 1;
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
+    root->father=NULL;
 
     return root;
 }
 
-template<class T>
-Node<T> *AvlTree<T>::LeftRotate(Node<T> *r) {
-    Node<T> *pb = r->right_son;
-    Node<T> *pc = pb->left_son;
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
+    Node<T, L> *pb = r->right_son;
+    Node<T, L> *pc = pb->left_son;
     if (r->father) {
-        if (((r->father)->left_son)->ID == r->ID) {
+        if (compare(((r->father)->left_son)->obj, r->obj)==0) {
             r->father->left_son = pb;
         } else {
             r->father->right_son = pb;
@@ -217,18 +217,18 @@ Node<T> *AvlTree<T>::LeftRotate(Node<T> *r) {
     //update height
     pb->height = max(calcHeight(pb->left_son), calcHeight(pb->right_son)) + 1;
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
-
+    root->father=NULL;
     return root;
 }
 
-template<class T>
-Node<T> *AvlTree<T>::LRRotate(Node<T> *r) {
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::LRRotate(Node<T, L> *r) {
     LeftRotate(r->left_son);
     return RightRotate(r);
 }
 
-template<class T>
-Node<T> *AvlTree<T>::RLRotate(Node<T> *r) {
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::RLRotate(Node<T, L> *r) {
     RightRotate(r->right_son);
     return LeftRotate(r);
 }

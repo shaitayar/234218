@@ -8,8 +8,11 @@
 
 
 class EmployeeManager {
-    AvlTree <shared_ptr<Company >> companies;
-    AvlTree <shared_ptr<Employee>*> allEmployees;
+    AvlTree <Employee*, ID> employee_by_id;
+    AvlTree <Employee*, Salary> employee_by_salary;
+    AvlTree <Company*, ID> company_by_id;
+    AvlTree <Company*, ID> company_not_empty_by_id;
+
 
 
 public:

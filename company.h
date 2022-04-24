@@ -11,7 +11,8 @@ using std::string;
 class Company{
     int ID;
     int value;
-    AvlTree <shared_ptr<Employee> > employees;
+    AvlTree <Employee *, comp>  c_employee_by_id;
+    AvlTree <Employee *, salary>  c_employee_by_salary;
 
 public:
     Company(int ID, int value): ID(ID), value(value){};
