@@ -57,7 +57,18 @@ void EmployeeManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, int Bu
 
 
 void EmployeeManager::HireEmployee(int EmployeeID, int NewCompanyID){
+    auto node = employee_by_id.find(EmployeeID);
+    if (!node) throw EmFailure();
+    Employee * emp = node->obj;
+    Company * company1 = emp->getCompany();
+    auto n_company = company_by_id.find(NewCompanyID);
+    if (!n_company) throw EmFailure();
+    Company * company2 = n_company->obj;
 
+    //remove from company 1 and add to company 2
+    emp->setCompany(company2);
+    company1->RemoveEmployee(EmployeeID);
+    company2->addEmployee(emp);
 }
 
 
