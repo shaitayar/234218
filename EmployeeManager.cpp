@@ -1,23 +1,34 @@
 #include "EmployeeManager.h"
 using std::exception;
 
-
-StatusType EmployeeManager::AddCompany(int CompanyID, int Value){
-    Company * company = new Company(CompanyID, Value);
-    if(company_by_id.find(CompanyID)!=NULL) return FAILURE;
-    company_by_id.insert(company);
-
-    return SUCCESS;
+EmployeeManager::~EmployeeManager(){
+    employee_by_id.DestroyTree();
+    employee_by_salary.DestroyTree();
+    company_by_id.DestroyTree();
 }
 
-StatusType EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade){
+void EmployeeManager::AddCompany(int CompanyID, int Value){
+    Company * company = new Company(CompanyID, Value);
+    if(company_by_id.find(CompanyID)!=NULL) throw EmInvalidInput();
+    company_by_id.insert(company);
+}
+
+void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade){
     Node<Company , CompCompanyById> * c = company_by_id.find(CompanyID);
-    Employee * employee = new Employee(EmployeeID, Salary, Grade, shared_ptr<struct Company>((c->obj)));
+    Employee * employee = new Employee(EmployeeID, Salary, Grade, (c->obj));
     if (employee_by_id.find(EmployeeID)!=NULL){
-        return FAILURE;
+        throw EmInvalidInput();
     }
     employee_by_id.insert(employee);
     employee_by_salary.insert(employee);
     (c->obj)->addEmployee(employee);
-    return SUCCESS;
+}
+
+void EmployeeManager::RemoveEmployee(int EmployeeID){
+    auto node = employee_by_id.find(EmployeeID);
+    Employee * employee = node->obj;
+    Company * company = employee->getCompany();
+    employee_by_id.deleteNode(EmployeeID);
+    company->RemoveEmployee(EmployeeID);
+
 }

@@ -1,5 +1,11 @@
 #include "company.h"
 
+Company::~Company(){
+    c_employee_by_id.DestroyTree();
+    c_employee_by_salary.DestroyTree();
+
+}
+
 int Company::getID() const{
     return this->ID;
 }
@@ -9,11 +15,6 @@ int Company::getValue() const{
 }
 
 void Company::addEmployee(Employee *employee){
-    try{
-        c_employee_by_id.insert(employee);
-    }
-    catch (std::exception & e) {
-
-    }
+    c_employee_by_id.insert(employee);
     c_employee_by_salary.insert(employee);
 }

@@ -3,7 +3,7 @@
 
 #include "company.h"
 #include "employee.h"
-#include "library1.h"
+#include "AvlTree.h"
 #include <stdio.h>
 #include "exception"
 
@@ -21,16 +21,21 @@ public:
     EmployeeManager():ed(), es(),cd(), employee_by_id(ed), employee_by_salary(es),
                        company_by_id(cd){};
 
-    StatusType AddCompany(int CompanyID, int Value);
+    ~EmployeeManager();
 
-    StatusType AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade);
+    void AddCompany(int CompanyID, int Value);
 
-    StatusType RemoveEmployee(int EmployeeID);
+    void AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade);
+
+    void RemoveEmployee(int EmployeeID);
 
     void print() const{
         employee_by_salary.print();
     }
 
+    class EmException: public std::exception{};
+    class EmFailure: public EmException{};
+    class EmInvalidInput: public EmException{};
 };
 
 

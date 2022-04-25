@@ -22,7 +22,7 @@ public:
     Company(int ID, int value) : ID(ID), value(value), ed(), es(), c_employee_by_id(ed),
                                  c_employee_by_salary(es) {};
 
-    ~Company() = default;
+    ~Company();
 
     int getID() const;
 

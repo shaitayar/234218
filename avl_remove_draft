@@ -1,0 +1,98 @@
+template<class T, class L>
+void AvlTree<T, L>::RemoveNode(int NodeID) {
+    //find node
+    Node<T,L> * node = this->find(NodeID);
+    if (!node) return;
+    //no father, right or left sons
+    if (!node->right_son && !node->left_son && !node->father){
+        delete node->obj;
+        delete node;
+        root= NULL;
+        return;
+    }
+    //Only father node
+    if (!node->left_son && !node->right_son && node->father){
+        Node<T,L>* f_node = node->father;
+        if (compare(f_node->left_son, node)==0){
+            delete node->obj;
+            delete node;
+            f_node->left_son = NULL;
+        }
+        else if(compare(f_node->right_son, node)==0){
+            delete node->obj;
+            delete node;
+            f_node->right_son = NULL;
+        }
+        f_node->height = max(calcHeight(f_node->right_son), calcHeight(f_node->left_son))+1;
+        balance(f_node);
+
+    }
+    //has left son, no right son
+    else if (node->left_son && !node->right_son){
+        //no father
+        if (!node->father){
+            root = node->left_son;
+            root->father = NULL;
+            delete node->obj;
+            delete node;
+        }
+        //yes father
+        else{
+            Node<T,L>* f_node = node->father;
+
+            //has father right son
+            if (compare(f_node->right_son,node)==0){
+                f_node->right_son = node->left_son;
+            }
+
+            //has father left son
+            else{
+                f_node->left_son = node->left_son;
+
+            }
+            node->left_son->father = f_node;
+            //delete node and balance father
+            delete node->obj;
+            delete node;
+            f_node->height = max(calcHeight(f_node->right_son), calcHeight(f_node->left_son))+1;
+            balance(f_node);
+        }
+    }
+    //has right son, no left son
+    else if(node->right_son && !node->left_son){
+        //no father
+        if (!node->father) {
+            root = node->right_son;
+            root->father = NULL;
+            delete node->obj;
+            delete node;
+        }
+        //has father
+        else{
+            Node<T,L>* f_node = node->father;
+            //has father right son
+            if (compare(f_node->right_son,node)==0){
+                f_node->right_son = node->right_son;
+            }
+            //has father left son
+            else{
+                f_node->left_son = node->right_son;
+            }
+            (node->right_son)->father = f_node;
+            //delete node and balance father
+            delete node->obj;
+            delete node;
+            f_node->height = max(calcHeight(f_node->right_son), calcHeight(f_node->left_son))+1;
+            balance(f_node);
+        }
+    }
+
+    //has right and left son
+    else{
+        //no father
+
+
+        //has father
+
+    }
+}

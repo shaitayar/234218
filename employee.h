@@ -12,14 +12,16 @@ class Employee{
     int ID;
     int salary;
     int grade;
-    shared_ptr<Company>  p_company;
+    Company *  p_company;
 
 public:
-    Employee(int ID, int salary, int grade, shared_ptr<Company> p_company);
+    Employee(int ID, int salary, int grade, Company* p_company);
     ~Employee()=default;
     int getID() const;
     int getSalary() const;
     int getGrade() const;
+    Company* getCompany() const;
+    void setCompany(Company* new_company){this->p_company = new_company;}
     void print() const{
         std::cout<<getID()<<std::endl;
     }
