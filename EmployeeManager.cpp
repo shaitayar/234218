@@ -32,3 +32,33 @@ void EmployeeManager::RemoveEmployee(int EmployeeID){
     //company->RemoveEmployee(EmployeeID);
 
 }
+
+void EmployeeManager::GetCompanyInfo(int CompanyID, int *Value, int *NumEmployees)
+{
+    if ((!Value)||(!NumEmployees)||(CompanyID<=0))
+        throw EmInvalidInput();
+    auto node = company_by_id.find(CompanyID);
+    if (node==NULL)
+        throw EmFailure();
+    *Value = node->obj->getValue();
+    *NumEmployees = node->obj->getSize();
+}
+
+void EmployeeManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease)
+{
+    if ((CompanyID<=0)|| (ValueIncrease <=0))
+        throw EmInvalidInput();
+    auto node = company_by_id.find(CompanyID);
+    if (node==NULL)
+        throw EmFailure();
+    int curr_value = node->obj->getValue();
+    node->obj->setValue(curr_value+ValueIncrease);
+}
+
+void AcquireCompany(int AcquirerID, int TargetID, double Factor)
+{
+    if ((AcquirerID<=0)||(TargetID<=0)||(AcquirerID==TargetID)||(Factor<1))
+        throw EmInvalidInput();
+    if ()
+
+}
