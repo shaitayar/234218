@@ -9,7 +9,7 @@ EmployeeManager::~EmployeeManager(){
 
 void EmployeeManager::AddCompany(int CompanyID, int Value){
     Company * company = new Company(CompanyID, Value);
-    if(company_by_id.find(CompanyID)!=NULL) throw EmInvalidInput();
+    if(company_by_id.find(CompanyID)!=NULL) throw EmFailure();
     company_by_id.insert(company);
 }
 
@@ -17,7 +17,7 @@ void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int
     Node<Company , CompCompanyById> * c = company_by_id.find(CompanyID);
     Employee * employee = new Employee(EmployeeID, Salary, Grade, (c->obj));
     if (employee_by_id.find(EmployeeID)!=NULL){
-        throw EmInvalidInput();
+        throw EmFailure();
     }
     employee_by_id.insert(employee);
     employee_by_salary.insert(employee);
@@ -29,6 +29,6 @@ void EmployeeManager::RemoveEmployee(int EmployeeID){
     Employee * employee = node->obj;
     Company * company = employee->getCompany();
     employee_by_id.deleteNode(EmployeeID);
-    company->RemoveEmployee(EmployeeID);
+    //company->RemoveEmployee(EmployeeID);
 
 }

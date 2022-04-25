@@ -171,7 +171,7 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
                 delete temp;
 
             }
-                //has right
+            //has right
             else if (node->right_son) {
 
                 Node<T, L> *temp = node->right_son;
@@ -269,7 +269,7 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     Node<T, L> *pb = r->left_son;
     Node<T, L> *pc = pb->right_son;
     if (r->father) {
-        if (compare(((r->father)->left_son)->obj, r->obj) == 0) {
+        if ((r->father)->left_son == r) {
             r->father->left_son = pb;
         } else {
             r->father->right_son = pb;
@@ -352,7 +352,7 @@ void DestroyTreeAux(Node<T, L> *node) {
     if (!node) return;
     DestroyTreeAux(node->right_son);
     DestroyTreeAux(node->left_son);
-    delete node->obj;
+    //delete node->obj;
     delete node;
 }
 

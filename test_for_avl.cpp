@@ -7,17 +7,17 @@ using std::string;
 
 
 int main() {
-    CompEmployeeById c;
-    AvlTree<Employee,CompEmployeeById> tree(c);
+    CompEmployeeBySalary c;
+    AvlTree<Employee,CompEmployeeBySalary> tree(c);
     Company c1(10,100);
     Company c2 (20,200);
     Employee e1(1, 100, 1, (&c1));
-    Employee e2(2, 200, 2, (&c1));
-    Employee e3(3, 300, 2, (&c1));
-    Employee e4(4, 400, 2, (&c1));
-    Employee e5(5, 500, 5, (&c1));
-    Employee e6(6, 600, 6, (&c1));
-    Employee e7(7, 700, 7, (&c1));
+    Employee e2(2, 100, 2, (&c1));
+    Employee e3(3, 100, 2, (&c1));
+    Employee e4(4, 100, 2, (&c1));
+    Employee e5(5, 200, 5, (&c1));
+    Employee e6(6, 200, 6, (&c1));
+    Employee e7(7, 200, 7, (&c1));
     Employee e8(8, 800, 8, (&c1));
     Employee e9(9, 900, 9, (&c1));
     Employee e10(10, 1000, 10, (&c1));
@@ -34,7 +34,10 @@ int main() {
     tree.insert(&e9);
     tree.insert(&e10);
 
+    tree.print();
+    std::cout<<"\n\n"<<std::endl;
+    tree.deleteNode(4);
+    tree.print();
 
-    tree.deleteNode(7);
     return 0;
 }

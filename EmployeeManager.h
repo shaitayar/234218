@@ -36,6 +36,8 @@ public:
     class EmException: public std::exception{};
     class EmFailure: public EmException{};
     class EmInvalidInput: public EmException{};
+    class EmAllocationError: public EmException{};
+
 };
 
 
