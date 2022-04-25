@@ -21,7 +21,13 @@ public:
     int getSalary() const;
     int getGrade() const;
     Company* getCompany() const;
+
+    void setSalary(int SalaryIncrease);
+
+    void setGrade();
+
     void setCompany(Company* new_company){this->p_company = new_company;}
+
     void print() const{
         std::cout<<getID()<<std::endl;
     }

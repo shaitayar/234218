@@ -29,11 +29,18 @@ public:
 
     void RemoveEmployee(int EmployeeID);
 
+    void GetEmployeeInfo(int EmployeeID, int *EmployerID, int *Salary, int *Grade);
+
     void print() const{
         employee_by_salary.print();
     }
 
-    class EmException: public std::exception{};
+    void PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade);
+
+    void HireEmployee(int EmployeeID, int NewCompanyID);
+
+
+        class EmException: public std::exception{};
     class EmFailure: public EmException{};
     class EmInvalidInput: public EmException{};
     class EmAllocationError: public EmException{};

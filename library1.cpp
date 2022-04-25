@@ -25,7 +25,17 @@ void * Init(){
  */
 StatusType AddEmployee(void *DS, int EmployeeID, int CompanyID, int Salary, int Grade){
     if (DS==NULL || EmployeeID<=0 || CompanyID<=0 || Grade<0) return INVALID_INPUT;
-    return ((EmployeeManager*)DS)->AddEmployee(EmployeeID, CompanyID, Salary, Grade);
+    try{
+        ((EmployeeManager*)DS)->AddEmployee(EmployeeID, CompanyID, Salary, Grade);
+    }
+    catch (EmployeeManager::EmFailure& e) {
+        return FAILURE;
+    }
+    catch (EmployeeManager::EmAllocationError& e) {
+        return ALLOCATION_ERROR;
+    }
+
+    return SUCCESS;
 
 }
 
@@ -38,9 +48,17 @@ StatusType AddEmployee(void *DS, int EmployeeID, int CompanyID, int Salary, int 
  */
 StatusType RemoveEmployee(void *DS, int EmployeeID){
     if(DS==NULL || EmployeeID<=0) return INVALID_INPUT;
-    return ((EmployeeManager*)DS)->RemoveEmployee(EmployeeID);
+    try{
+        ((EmployeeManager*)DS)->RemoveEmployee(EmployeeID);
+    }
+    catch (EmployeeManager::EmFailure& e) {
+        return FAILURE;
+    }
+    catch (EmployeeManager::EmAllocationError& e) {
+        return ALLOCATION_ERROR;
+    }
 
-
+    return SUCCESS;
 }
 
 
@@ -58,9 +76,47 @@ StatusType RemoveEmployee(void *DS, int EmployeeID){
 
 StatusType AddCompany(void * DS, int CompanyID, int Value){
     if (DS==NULL || CompanyID<=0 || Value<=0) return INVALID_INPUT;
-    return ((EmployeeManager*)DS)->AddCompany(CompanyID, Value);
+    try{
+        ((EmployeeManager*)DS)->AddCompany(CompanyID, Value);
+    }
+    catch(const EmployeeManager::EmFailure & e){
+        return FAILURE;
+    }
+    catch (EmployeeManager::EmAllocationError& e) {
+        return ALLOCATION_ERROR;
+    }
+    return SUCCESS;
+}
+
+
+StatusType GetEmployeeInfo(void *DS, int EmployeeID, int *EmployerID, int *Salary, int *Grade){
+    if (DS==NULL || EmployerID==NULL || Salary==NULL || Grade==NULL ||EmployeeID<=0) return INVALID_INPUT;
+    try{
+        ((EmployeeManager*)DS)->GetEmployeeInfo(EmployeeID, EmployerID, Salary, Grade);
+    }
+    catch (EmployeeManager::EmFailure& e) {
+        return FAILURE;
+    }
+    return SUCCESS;
 }
 
 
 
+StatusType PromoteEmployee(void *DS, int EmployeeID, int SalaryIncrease, int BumpGrade){
+    if (DS==NULL || EmployeeID<=0 || SalaryIncrease<=0) return INVALID_INPUT;
+    try{
+        ((EmployeeManager*)DS)->PromoteEmployee(EmployeeID, SalaryIncrease, BumpGrade);
+    }
+    catch (EmployeeManager::EmFailure& e) {
+        return FAILURE;
+    }
+    return SUCCESS;
+}
 
+StatusType HireEmployee(void *DS, int EmployeeID, int NewCompanyID){
+    if(DS==NULL || EmployeeID<=0 || NewCompanyID<=0) return INVALID_INPUT;
+    try{
+        ((EmployeeManager*)DS)->HireEmployee(EmployeeID, NewCompanyID);
+    }
+
+}
