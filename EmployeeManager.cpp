@@ -98,5 +98,5 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
 {
     if ((AcquirerID<=0)||(TargetID<=0)||(AcquirerID==TargetID)||(Factor<1))
         throw EmInvalidInput();
-
+    return;
 }
