@@ -149,9 +149,9 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
     if (node == NULL) return node;
 
     //if node key is bigger than NodeID - then left subtree
-    if (compare(node->obj, NodeID) > 0) {
+    if (node->obj->getID()> NodeID) {
         node->left_son = RemoveNode(node->left_son, NodeID);
-    } else if (compare(node->obj, NodeID) < 0) {
+    } else if (node->obj->getID()< NodeID) {
         node->right_son = RemoveNode(node->right_son, NodeID);
     }
         //find the Node to delete
@@ -237,20 +237,6 @@ Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj) {
     node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
 
     return balance(node);
-    /*if (calcBF(node) == 2) {
-        if (calcBF(node->left_son) >= 0) {
-            return LLRotate(node);
-        } else if (calcBF(node->left_son) == -1) {
-            return LRRotate(node);
-        }
-    } else if (calcBF(node) == -2) {
-        if (calcBF(node->right_son) <= 0) {
-            return RRRotate(node);
-        } else if (calcBF(node->right_son) == 1) {
-            return RLRotate(node);
-        }
-    }*/
-
 }
 
 template<class T, class L>

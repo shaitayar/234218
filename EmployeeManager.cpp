@@ -31,7 +31,7 @@ void EmployeeManager::RemoveEmployee(int EmployeeID){
     Employee * employee = node->obj;
     Company * company = employee->getCompany();
     employee_by_id.deleteNode(EmployeeID);
-    //company->RemoveEmployee(EmployeeID);
+    company->RemoveEmployee(EmployeeID);
 
 }
 
