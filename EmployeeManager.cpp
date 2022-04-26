@@ -12,6 +12,7 @@ void EmployeeManager::AddCompany(int CompanyID, int Value){
     if (!company) throw EmAllocationError();
     if(company_by_id.find(CompanyID)!=NULL) throw EmFailure();
     company_by_id.insert(company);
+    company_num++;
 }
 
 void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade){
@@ -24,6 +25,9 @@ void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int
     employee_by_id.insert(employee);
     employee_by_salary.insert(employee);
     (c->obj)->addEmployee(employee);
+    employee_num++;
+    max_employee = employee_by_salary.getMaxNode();
+
 }
 
 void EmployeeManager::RemoveEmployee(int EmployeeID){
@@ -33,7 +37,22 @@ void EmployeeManager::RemoveEmployee(int EmployeeID){
     employee_by_id.deleteNode(EmployeeID);
     company->RemoveEmployee(EmployeeID);
 
+    delete employee;
+    max_employee = employee_by_salary.getMaxNode();
+
 }
+
+void EmployeeManager::RemoveCompany(int CompanyID){
+    auto comp = company_by_id.find(CompanyID);
+    if (!comp) throw EmFailure();
+    Company * company = comp->obj;
+
+    //If company has workers
+    if (company->getSize()!=0) throw EmFailure();
+    company_by_id.deleteNode(CompanyID);
+    delete company;
+}
+
 
 void EmployeeManager::GetEmployeeInfo(int EmployeeID, int *EmployerID, int *Salary, int *Grade){
     auto node = employee_by_id.find(EmployeeID);
@@ -77,8 +96,7 @@ void EmployeeManager::GetCompanyInfo(int CompanyID, int *Value, int *NumEmployee
     if ((!Value)||(!NumEmployees)||(CompanyID<=0))
         throw EmInvalidInput();
     auto node = company_by_id.find(CompanyID);
-    if (node==NULL)
-        throw EmFailure();
+    if (node==NULL) throw EmFailure();
     *Value = node->obj->getValue();
     *NumEmployees = node->obj->getSize();
 }
@@ -99,4 +117,16 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     if ((AcquirerID<=0)||(TargetID<=0)||(AcquirerID==TargetID)||(Factor<1))
         throw EmInvalidInput();
     return;
+}
+
+void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID){
+    if (CompanyID<0){
+        *EmployeeID = max_employee->obj->getID();
+    }
+    else if (CompanyID>0){
+        auto node = company_by_id.find(CompanyID);
+        if (!node) throw EmFailure();
+        Company * comp = node->obj;
+        *EmployeeID = comp->getMax();
+    }
 }

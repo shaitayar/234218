@@ -38,9 +38,9 @@ class AvlTree {
 
 public:
 
-    AvlTree(L compare) : compare(compare), root(NULL) {};
+    explicit AvlTree(L compare) : compare(compare), root(NULL) {};
 
-    ~AvlTree()=default;
+    ~AvlTree() = default;
 
     void DestroyTree();
 
@@ -60,17 +60,27 @@ public:
 
     Node<T, L> *find(int NodeID);
 
-    void preOrder() const;
+    Node<T, L> *getMaxNode();
 
     void print() const;
 
+    void printToList(int **) const;
+
     void inorder(Node<T, L> *) const;
 
-    void postOrder() const;
+
 };
 
 /*** AVL Implementation */
 
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::getMaxNode() {
+    Node<T, L> *iter = root;
+    while (iter && iter->right_son) {
+        iter = iter->right_son;
+    }
+    return iter;
+}
 
 template<class T, class L>
 int calcBF(Node<T, L> *node) {
@@ -149,9 +159,9 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
     if (node == NULL) return node;
 
     //if node key is bigger than NodeID - then left subtree
-    if (node->obj->getID()> NodeID) {
+    if (node->obj->getID() > NodeID) {
         node->left_son = RemoveNode(node->left_son, NodeID);
-    } else if (node->obj->getID()< NodeID) {
+    } else if (node->obj->getID() < NodeID) {
         node->right_son = RemoveNode(node->right_son, NodeID);
     }
         //find the Node to delete
@@ -161,27 +171,23 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
             //has left
             if (node->left_son) {
                 Node<T, L> *temp = node->left_son;
-                T *obj_to_del = node->obj;
                 node->obj = temp->obj;
                 /**not necessary*/
                 node->left_son = temp->left_son;
                 node->right_son = temp->right_son;
 
-                delete obj_to_del;
                 delete temp;
 
             }
-            //has right
+                //has right
             else if (node->right_son) {
 
                 Node<T, L> *temp = node->right_son;
-                T *obj_to_del = node->obj;
                 node->obj = temp->obj;
                 /**not necessary*/
                 node->left_son = temp->left_son;
                 node->right_son = temp->right_son;
 
-                delete obj_to_del;
                 delete temp;
 
             }
@@ -189,9 +195,8 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
             else {
                 Node<T, L> *temp;
                 temp = node;
-                node=NULL;
+                node = NULL;
 
-                //delete temp->obj;
                 delete temp;
             }
         }
@@ -199,12 +204,12 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
         else {
             //o(log (current node height))
             Node<T, L> *temp = find_minimal(node->right_son);
-            std::cout<<"here!"<<std::endl;
+            std::cout << "here!" << std::endl;
             node->obj = temp->obj;
             node->right_son = RemoveNode(node->right_son, node->obj->getID());
         }
     }
-    if (node==NULL) return node;
+    if (node == NULL) return node;
     node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
     return balance(node);
 }
@@ -327,10 +332,24 @@ void AvlTree<T, L>::inorder(Node<T, L> *p) const {
 }
 
 template<class T, class L>
+int inorder_back(Node<T, L> *p, int **keys, int index) {
+    if (p == NULL) return index;
+    index = inorder_back(p->right_son, keys, index);
+    (*keys)[index++] = p->obj->getID();
+    index= inorder_back(p->left_son, keys, index);
+
+    return index;
+}
+
+template<class T, class L>
 void AvlTree<T, L>::print() const {
     inorder(root);
 }
 
+template<class T, class L>
+void AvlTree<T, L>::printToList(int **keys) const {
+    inorder_back(root, keys, 0);
+}
 
 
 template<class T, class L>
@@ -343,7 +362,7 @@ void DestroyTreeAux(Node<T, L> *node) {
 }
 
 template<class T, class L>
-void AvlTree<T,L>::DestroyTree(){
+void AvlTree<T, L>::DestroyTree() {
     DestroyTreeAux(root);
 }
 

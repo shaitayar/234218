@@ -33,11 +33,11 @@ int main() {
     tree.insert(&e6);
     tree.insert(&e9);
     tree.insert(&e10);
-
-    tree.print();
-    std::cout<<"\n\n"<<std::endl;
-    tree.deleteNode(4);
-    tree.print();
-
+    int * keys= new int [10];
+    tree.printToList(&keys);
+   for (int i = 0; i < 10; ++i) {
+        std::cout<<keys[i]<<std::endl;
+    }
+    delete [] keys;
     return 0;
 }

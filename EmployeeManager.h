@@ -8,6 +8,9 @@
 #include "exception"
 
 class EmployeeManager {
+    int company_num;
+    int employee_num;
+    Node<Employee, CompEmployeeBySalary> * max_employee;
     CompEmployeeById ed;
     CompEmployeeBySalary es;
     CompCompanyById cd;
@@ -18,7 +21,7 @@ class EmployeeManager {
 
 
 public:
-    EmployeeManager():ed(), es(),cd(), employee_by_id(ed), employee_by_salary(es),
+    EmployeeManager():company_num(0), employee_num(0), max_employee(NULL), ed(), es(),cd(), employee_by_id(ed), employee_by_salary(es),
                        company_by_id(cd){};
 
     ~EmployeeManager();
@@ -27,7 +30,7 @@ public:
 
     void AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade);
 
-    void RemoveCompany(int EmployeeID);
+    void RemoveCompany(int CompanyID);
 
     void RemoveEmployee(int EmployeeID);
 
@@ -48,6 +51,9 @@ public:
     void HireEmployee(int EmployeeID, int NewCompanyID);
 
     void AcquireCompany(int AcquirerID, int TargetID, double Factor);
+
+    void GetHighestEarner(int CompanyID, int *EmployeeID);
+
 
     class EmException: public std::exception{};
     class EmFailure: public EmException{};
