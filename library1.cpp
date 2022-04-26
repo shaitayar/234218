@@ -118,5 +118,9 @@ StatusType HireEmployee(void *DS, int EmployeeID, int NewCompanyID){
     try{
         ((EmployeeManager*)DS)->HireEmployee(EmployeeID, NewCompanyID);
     }
-
+    catch (EmployeeManager::EmFailure& e) {
+        return FAILURE;
+    }
+    return SUCCESS;
 }
+

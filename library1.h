@@ -52,7 +52,7 @@ StatusType PromoteEmployee(void *DS, int EmployeeID, int SalaryIncrease, int Bum
 StatusType HireEmployee(void *DS, int EmployeeID, int NewCompanyID);
 
 StatusType AcquireCompany(void *DS, int AcquirerID, int TargetID, double Factor);
-
+/***/
 StatusType GetHighestEarner(void *DS, int CompanyID, int *EmployeeID);
 
 StatusType GetAllEmployeesBySalary(void *DS, int CompanyID, int **Employees, int *NumOfEmployees);

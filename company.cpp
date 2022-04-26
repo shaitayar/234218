@@ -13,8 +13,23 @@ int Company::getID() const{
 int Company::getValue() const{
     return this->value;
 }
+int Company::getSize() const{
+    return this->size;
+}
 
 void Company::addEmployee(Employee *employee){
     c_employee_by_id.insert(employee);
     c_employee_by_salary.insert(employee);
+}
+
+void Company::setValue(int new_value)
+{
+    this->value = new_value;
+}
+
+void Company::RemoveEmployee(int employeeID)
+{
+    this->c_employee_by_id.deleteNode(employeeID);
+    this->c_employee_by_salary.deleteNode(employeeID);
+    size--;
 }

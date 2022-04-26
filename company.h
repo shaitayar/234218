@@ -13,13 +13,14 @@ using std::string;
 class Company {
     int ID;
     int value;
+    int size;
     CompEmployeeById ed;
     CompEmployeeBySalary es;
     AvlTree<Employee, CompEmployeeById> c_employee_by_id;
     AvlTree<Employee, CompEmployeeBySalary> c_employee_by_salary;
 
 public:
-    Company(int ID, int value) : ID(ID), value(value), ed(), es(), c_employee_by_id(ed),
+    Company(int ID, int value) : ID(ID), value(value), size(0), ed(), es(), c_employee_by_id(ed),
                                  c_employee_by_salary(es) {};
 
     ~Company();
@@ -27,6 +28,8 @@ public:
     int getID() const;
 
     int getValue() const;
+
+    int getSize() const;
 
     void setValue(int value);
 

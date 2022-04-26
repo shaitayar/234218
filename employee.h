@@ -58,7 +58,11 @@ public:
     int operator()(Employee * e1, Employee * e2) const{
         int s1 = e1->getSalary();
         int s2 = e2->getSalary();
-        if (s1 >= s2) return 1;
+        if (s1 == s2){
+            CompEmployeeById c;
+            return c(e1,e2);
+        }
+        else if(s1>s2) return 1;
         else return -1;
     }
 

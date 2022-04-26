@@ -27,7 +27,11 @@ public:
 
     void AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade);
 
+    void RemoveCompany(int EmployeeID);
+
     void RemoveEmployee(int EmployeeID);
+
+    void GetCompanyInfo(int CompanyID, int *Value, int *NumEmployees);
 
     void GetEmployeeInfo(int EmployeeID, int *EmployerID, int *Salary, int *Grade);
 
@@ -35,12 +39,17 @@ public:
         employee_by_salary.print();
     }
 
+    void IncreaseCompanyValue(int CompanyID, int ValueIncrease);
+
+
     void PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade);
+
 
     void HireEmployee(int EmployeeID, int NewCompanyID);
 
+    void AcquireCompany(int AcquirerID, int TargetID, double Factor);
 
-        class EmException: public std::exception{};
+    class EmException: public std::exception{};
     class EmFailure: public EmException{};
     class EmInvalidInput: public EmException{};
     class EmAllocationError: public EmException{};
