@@ -50,7 +50,6 @@ StatusType IncreaseCompanyValue(void *DS, int CompanyID, int ValueIncrease);
 StatusType PromoteEmployee(void *DS, int EmployeeID, int SalaryIncrease, int BumpGrade);
 
 StatusType HireEmployee(void *DS, int EmployeeID, int NewCompanyID);
-/***/
 
 StatusType AcquireCompany(void *DS, int AcquirerID, int TargetID, double Factor);
 

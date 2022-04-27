@@ -5,6 +5,8 @@ EmployeeManager::~EmployeeManager(){
     employee_by_id.DestroyTree();
     employee_by_salary.DestroyTree();
     company_by_id.DestroyTree();
+    company_not_empty.DestroyTree();
+
 }
 
 void EmployeeManager::AddCompany(int CompanyID, int Value){
@@ -27,7 +29,7 @@ void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int
     (c->obj)->addEmployee(employee);
     employee_num++;
     max_employee = employee_by_salary.getMaxNode();
-
+    company_not_empty.insert(c->obj);
 }
 
 void EmployeeManager::RemoveEmployee(int EmployeeID){
@@ -39,7 +41,7 @@ void EmployeeManager::RemoveEmployee(int EmployeeID){
 
     delete employee;
     max_employee = employee_by_salary.getMaxNode();
-
+    if (company->getSize()==0) company_not_empty.deleteNode(company->getID());
 }
 
 void EmployeeManager::RemoveCompany(int CompanyID){
@@ -50,6 +52,7 @@ void EmployeeManager::RemoveCompany(int CompanyID){
     //If company has workers
     if (company->getSize()!=0) throw EmFailure();
     company_by_id.deleteNode(CompanyID);
+    company_not_empty.deleteNode(CompanyID);
     delete company;
 }
 
@@ -114,8 +117,6 @@ void EmployeeManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease)
 
 void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor)
 {
-    if ((AcquirerID<=0)||(TargetID<=0)||(AcquirerID==TargetID)||(Factor<1))
-        throw EmInvalidInput();
     return;
 }
 
@@ -150,6 +151,10 @@ void EmployeeManager::GetAllEmployeesBySalary(int CompanyID, int **Employees, in
 }
 
 void EmployeeManager::GetHighestEarnerInEachCompany(int NumOfCompanies, int **Employees){
+    if (company_not_empty.getSize()<NumOfCompanies) throw EmFailure();
+    *Employees = (int*)std::malloc(NumOfCompanies*sizeof(int));
+    if(!Employees) throw EmAllocationError();
 
+    company_not_empty.getNMax(NumOfCompanies, Employees);
 }
 

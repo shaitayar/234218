@@ -25,6 +25,7 @@ void Company::addEmployee(Employee *employee){
     c_employee_by_id.insert(employee);
     c_employee_by_salary.insert(employee);
     max_sal_emp = c_employee_by_salary.getMaxNode();
+    size++;
 }
 
 void Company::setValue(int new_value)

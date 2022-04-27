@@ -18,8 +18,8 @@ int main() {
     Employee e5(5, 200, 5, (&c1));
     Employee e6(6, 200, 6, (&c1));
     Employee e7(7, 200, 7, (&c1));
-    Employee e8(8, 800, 8, (&c1));
-    Employee e9(9, 900, 9, (&c1));
+    Employee e8(8, 1000, 8, (&c1));
+    Employee e9(9, 1000, 9, (&c1));
     Employee e10(10, 1000, 10, (&c1));
 
     tree.insert(&e3);
@@ -33,11 +33,6 @@ int main() {
     tree.insert(&e6);
     tree.insert(&e9);
     tree.insert(&e10);
-    int * keys= new int [10];
-    tree.printToList(&keys);
-   for (int i = 0; i < 10; ++i) {
-        std::cout<<keys[i]<<std::endl;
-    }
-    delete [] keys;
+    std::cout<<tree.getSize();
     return 0;
 }

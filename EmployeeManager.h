@@ -17,12 +17,13 @@ class EmployeeManager {
     AvlTree <Employee, CompEmployeeById> employee_by_id;
     AvlTree <Employee, CompEmployeeBySalary> employee_by_salary;
     AvlTree <Company, CompCompanyById> company_by_id;
+    AvlTree<Company, CompCompanyById> company_not_empty;
 
 
 
 public:
     EmployeeManager():company_num(0), employee_num(0), max_employee(NULL), ed(), es(),cd(), employee_by_id(ed), employee_by_salary(es),
-                       company_by_id(cd){};
+                       company_by_id(cd), company_not_empty(cd){};
 
     ~EmployeeManager();
 

@@ -60,7 +60,7 @@ public:
         int s2 = e2->getSalary();
         if (s1 == s2){
             CompEmployeeById c;
-            return c(e1,e2);
+            return c(e2,e1);
         }
         else if(s1>s2) return 1;
         else return -1;
