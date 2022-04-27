@@ -45,3 +45,10 @@ void Company::RemoveEmployee(int employeeID)
 void Company::printToList(int ** arr){
     c_employee_by_salary.printToList(arr);
 }
+
+void Company::getMatchCompany(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
+                              int MinGrade,
+                              int *TotalNumOfEmployees, int *NumOfEmployees){
+    c_employee_by_id.getMatch(MinEmployeeID, MaxEmployeeId, MinSalary,
+                               MinGrade,TotalNumOfEmployees, NumOfEmployees);
+}

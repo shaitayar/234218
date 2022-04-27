@@ -72,6 +72,10 @@ public:
     int getSize() const {return size;}
 
     void getNMax(int, int**);
+
+    void getMatch(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
+                                  int MinGrade,
+                                  int *TotalNumOfEmployees, int *NumOfEmployees);
 };
 
 /*** AVL Implementation */
@@ -383,6 +387,13 @@ void DestroyTreeAux(Node<T, L> *node) {
 template<class T, class L>
 void AvlTree<T, L>::DestroyTree() {
     DestroyTreeAux(root);
+}
+
+template<class T, class L>
+void AvlTree<T,L>::getMatch(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
+                              int MinGrade,
+                              int *TotalNumOfEmployees, int *NumOfEmployees){
+
 }
 
 #endif

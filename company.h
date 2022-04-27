@@ -45,6 +45,9 @@ public:
     void print() const{
         std::cout<<getID()<<std::endl;
     }
+    void getMatchCompany(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
+                         int MinGrade,
+                         int *TotalNumOfEmployees, int *NumOfEmployees);
 };
 
 class CompCompanyById {

@@ -153,8 +153,24 @@ void EmployeeManager::GetHighestEarnerInEachCompany(int NumOfCompanies, int **Em
 void EmployeeManager::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeId, int MinSalary,
                                               int MinGrade,
                                               int *TotalNumOfEmployees, int *NumOfEmployees) {
+
+    *TotalNumOfEmployees=0;
+    *NumOfEmployees=0;
+
     if (CompanyID<0){
-        employee_by_id.getMatch()
+        employee_by_id.getMatch(MinEmployeeID, MaxEmployeeId, MinSalary,
+                MinGrade,TotalNumOfEmployees, NumOfEmployees);
+    }
+    if(CompanyID>0){
+        auto node = company_by_id.find(CompanyID);
+        if (!node) throw EmFailure();
+        Company * company = node->obj;
+        if(company->getSize()==0){
+            return;
+        }
+        else{
+            company->getMatchCompany();
+        }
     }
 }
 
