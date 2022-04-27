@@ -37,9 +37,14 @@ public:
 
     void RemoveEmployee(int employeeID);
 
+    void merge(Company* target,Company* id_temp);
+
     void print() const{
         std::cout<<getID()<<std::endl;
     }
+
+    class EmException: public std::exception{};
+    class EmAllocationError: public EmException{};
 };
 
 class CompCompanyById {

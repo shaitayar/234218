@@ -96,10 +96,8 @@ void EmployeeManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease)
 
 
 
-void AcquireCompany(int AcquirerID, int TargetID, double Factor)
+void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor)
 {
-    if ((AcquirerID<=0)||(TargetID<=0)||(AcquirerID==TargetID)||(Factor<1))
-        throw EmInvalidInput();
     auto acquirer = company_by_id.find(AcquirerID);
     auto target = company_by_id.find(TargetID);
     if ((!acquirer)||(!target))
@@ -108,8 +106,10 @@ void AcquireCompany(int AcquirerID, int TargetID, double Factor)
     int acquirer_value = acquirer->obj->getValue();
     if (acquirer_value<(10*target_value))
         throw EmFailure();
-    Employee** combined = treesToArray(acquirer, target);
-    double new_value = (acquirer_value +target_value)*Factor;
-    Company* company = new Company(acquirer->obj->getID(), int(new_value));
-
+    double new_value = (acquirer->obj->getValue() +target->obj->getValue())*Factor;
+    Company* temp = new Company(acquirer->obj->getID(), int(new_value));
+    if (!temp)
+        throw EmAllocationError();
+    acquirer->obj->merge(target, temp);
+    this->RemoveCompany(TargetID);
 }

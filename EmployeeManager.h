@@ -29,6 +29,8 @@ public:
 
     void RemoveEmployee(int EmployeeID);
 
+    void AcquireCompany(int AcquirerID, int TargetID, double Factor);
+
     void print() const{
         employee_by_salary.print();
     }

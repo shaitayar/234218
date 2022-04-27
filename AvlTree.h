@@ -50,6 +50,8 @@ public:
 
     void deleteNode(int NodeID);
 
+    void arrayToTree (const T* arr, int arr_size,  AvlTree<T,L> avl);
+
     Node<T, L> *RRRotate(Node<T, L> *r);
 
     Node<T, L> *LLRotate(Node<T, L> *r);
@@ -67,6 +69,7 @@ public:
     void inorder(Node<T, L> *) const;
 
     void postOrder() const;
+
 };
 
 /*** AVL Implementation */
@@ -365,7 +368,7 @@ template<class T, class L>
 void merge(T* X, int x_size, T* Y,int y_size, T* result){
     int i = 0, j = 0, k=0;
     while((i < x_size) && (j < y_size)){
-        if(compare(X[i], Y[j]) > 0){
+        if(compare(*X[i], *Y[j]) > 0){
             result[k]=(Y[j]);
             k++;
             j++;
@@ -390,43 +393,41 @@ void inorder(const Node<T, L> root, T* arr)
 {
     if(root){
         inorder(root.left_son, arr);
-        arr[0]=(root.obj);
+        Node<T, L> copy = createNode(root.obj);
+        if (!copy)
+            throw EmAllocationError();
+        arr[0]=(*copy);
         inorder(root.right_son, arr++);
     }
 }
 
 template<class T, class L>
-T* treesToArray(const AvlTree<T,L> avl1,const AvlTree<T,L> avl2)
+void treesToArray(const AvlTree<T,L> avl1,const AvlTree<T,L> avl2, T** combined)
 {
     T* arr1 = new T [avl1.getSize()];
     T* arr2 = new T [avl2.getSize()];
     if ((!arr1) || (!arr2))
         throw EmAllocationError();
-    inorder(avl1, arr1);
-    inorder(avl2, arr2);
-    int new_size = (avl1.getSize()) + (avl2.getSize());
-    T* result = new T [new_size+1];
-    if (!result)
-        throw EmAllocationError();
-    merge(arr1,avl1.getSize(), arr2,avl2.getSize(), result[1]);
-    return result;
+    inorder(avl1->root, arr1);
+    inorder(avl2->root, arr2);
+    merge(arr1,avl1.getSize(), arr2,avl2.getSize(), combined[1]);
 }
 
 template<class T, class L>
 Node<T, L> connect (const T* arr, int serial, int max){
     if (serial > max)
         return NULL;
-    Node<T, L> node = createNode(arr[serial]);
+    Node<T, L> node = createNode(*arr[serial]);
     node.left_son = connect(arr, serial*2, max);
     node.right_son = connect(arr, (serial*2)+1, max);
+    return node;
 }
 
 
 template<class T, class L>
-void arrayToTree (const T* arr, int arr_size,  AvlTree<T,L> avl)
+void AvlTree<T, L>::arrayToTree (const T* arr, int arr_size)
 {
-    Node<T, L>* root = connect(arr, 1, arr_size);
-    avl
+    this->root = connect(arr, 1, arr_size);
 }
 
 
