@@ -4,4 +4,4 @@ project(234218)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(234218 AvlTree.h employee.h employee.cpp  company.cpp company.h
-        test_for_avl.cpp)
+        library1.h library1.cpp EmployeeManager.cpp EmployeeManager.h main.cpp)

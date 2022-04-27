@@ -78,7 +78,7 @@ public:
 template<class T, class L>
 int getNMaxAux(Node<T,L>* root, int ** Employees, int n, int counter){
     if (root==NULL || counter==n) return counter;
-    counter = getNMaxAux(root->left_son, counter, Employees);
+    counter = getNMaxAux(root->left_son, Employees, n, counter);
     (*Employees)[counter++] = root->obj->getMax();
     return counter;
 }

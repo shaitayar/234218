@@ -192,21 +192,21 @@ StatusType GetHighestEarner(void *DS, int CompanyID, int *EmployeeID) {
 }
 
 StatusType GetAllEmployeesBySalary(void *DS, int CompanyID, int **Employees, int *NumOfEmployees) {
-    if (DS == NULL || CompanyID == 0 || Employees == NULL || NumOfEmployees==NULL) return INVALID_INPUT;
+    if (DS == NULL || CompanyID == 0 || Employees == NULL || NumOfEmployees == NULL) return INVALID_INPUT;
     try {
         ((EmployeeManager *) DS)->GetAllEmployeesBySalary(CompanyID, Employees, NumOfEmployees);
     }
     catch (EmployeeManager::EmFailure &e) {
         return FAILURE;
     }
-    catch (EmployeeManager::EmAllocationError& e) {
+    catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
     return SUCCESS;
 }
 
 
-StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Employees){
+StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Employees) {
     if (DS == NULL || NumOfCompanies < 1 || Employees == NULL) return INVALID_INPUT;
     try {
         ((EmployeeManager *) DS)->GetHighestEarnerInEachCompany(NumOfCompanies, Employees);
@@ -214,10 +214,28 @@ StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Emp
     catch (EmployeeManager::EmFailure &e) {
         return FAILURE;
     }
+    catch (EmployeeManager::EmAllocationError &e) {
+        return ALLOCATION_ERROR;
+    }
     return SUCCESS;
 }
 
 StatusType GetNumEmployeesMatching(void *DS, int CompanyID, int MinEmployeeID, int MaxEmployeeId,
-                                   int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees);
+                                   int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees) {
+    if (DS == NULL || CompanyID == 0 || MinEmployeeID == MaxEmployeeId || MinSalary < 0 ||
+        MaxEmployeeId < 0 || MinEmployeeID < 0 || MinGrade < 0 || NumOfEmployees == NULL || TotalNumOfEmployees == NULL)
+        return INVALID_INPUT;
+    try {
+        ((EmployeeManager *) DS)->GetNumEmployeesMatching(CompanyID, MinEmployeeID, MaxEmployeeId, MinSalary, MinGrade,
+                                                          TotalNumOfEmployees, NumOfEmployees);
+    }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
+    return SUCCESS;
+}
 
-void Quit(void **DS);
+void Quit(void **DS){
+    if (DS==NULL) return ;
+    ((EmployeeManager *) DS)->Quit();
+}

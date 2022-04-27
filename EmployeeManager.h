@@ -10,20 +10,20 @@
 class EmployeeManager {
     int company_num;
     int employee_num;
-    Node<Employee, CompEmployeeBySalary> * max_employee;
+    Node<Employee, CompEmployeeBySalary> *max_employee;
     CompEmployeeById ed;
     CompEmployeeBySalary es;
     CompCompanyById cd;
-    AvlTree <Employee, CompEmployeeById> employee_by_id;
-    AvlTree <Employee, CompEmployeeBySalary> employee_by_salary;
-    AvlTree <Company, CompCompanyById> company_by_id;
+    AvlTree<Employee, CompEmployeeById> employee_by_id;
+    AvlTree<Employee, CompEmployeeBySalary> employee_by_salary;
+    AvlTree<Company, CompCompanyById> company_by_id;
     AvlTree<Company, CompCompanyById> company_not_empty;
 
 
-
 public:
-    EmployeeManager():company_num(0), employee_num(0), max_employee(NULL), ed(), es(),cd(), employee_by_id(ed), employee_by_salary(es),
-                       company_by_id(cd), company_not_empty(cd){};
+    EmployeeManager() : company_num(0), employee_num(0), max_employee(NULL), ed(), es(), cd(), employee_by_id(ed),
+                        employee_by_salary(es),
+                        company_by_id(cd), company_not_empty(cd) {};
 
     ~EmployeeManager();
 
@@ -39,7 +39,7 @@ public:
 
     void GetEmployeeInfo(int EmployeeID, int *EmployerID, int *Salary, int *Grade);
 
-    void print() const{
+    void print() const {
         employee_by_salary.print();
     }
 
@@ -59,11 +59,17 @@ public:
 
     void GetHighestEarnerInEachCompany(int NumOfCompanies, int **Employees);
 
+    void GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeId, int MinSalary, int MinGrade,
+                            int *TotalNumOfEmployees, int *NumOfEmployees);
 
-    class EmException: public std::exception{};
-    class EmFailure: public EmException{};
-    class EmInvalidInput: public EmException{};
-    class EmAllocationError: public EmException{};
+    void Quit();
+    class EmException : public std::exception {};
+
+    class EmFailure : public EmException {};
+
+    class EmInvalidInput : public EmException {};
+
+    class EmAllocationError : public EmException {};
 
 };
 

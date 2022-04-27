@@ -158,3 +158,11 @@ void EmployeeManager::GetHighestEarnerInEachCompany(int NumOfCompanies, int **Em
     company_not_empty.getNMax(NumOfCompanies, Employees);
 }
 
+void EmployeeManager::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeId, int MinSalary, int MinGrade,
+                             int *TotalNumOfEmployees, int *NumOfEmployees){
+    return;
+}
+
+void EmployeeManager::Quit(){
+    return;
+}
