@@ -33,20 +33,27 @@ void Company::RemoveEmployee(int employeeID)
 }
 
 
-void Company::merge(Company* target,Company* temp)
+void Company::EmptyCompany()
 {
-    int new_size = this->getSize() + target->getSize();
-    Employee** combined= new Employee*[new_size+1];
-    if (!combined)
-        throw EmAllocationError();
-    treesToArray(this->c_employee_by_id, target->c_employee_by_id, combined);
-    arrayToTree(combined, new_size+1, temp->c_employee_by_id);
-    delete this->c_employee_by_id;
-    treesToArray(this->c_employee_by_salary, target->c_employee_by_salary, combined);
-    arrayToTree(combined, new_size+1, temp->c_employee_by_salary);
-    delete this->c_employee_by_salary;
-    this->c_employee_by_id = temp->c_employee_by_id;
-    this->c_employee_by_salary = temp->c_employee_by_salary;
+    this->c_employee_by_id.emptyTree();
+    this->c_employee_by_salary.emptyTree();
+    this->size = 0;
+}
+
+
+void Company::merge(Company** target,int new_value)
+{
+    int new_size = this->getSize() + (*target)->getSize();
+    Employee** id_combined= new Employee*[new_size+1];
+    Employee** salary_combined= new Employee*[new_size+1];
+    if ((!id_combined)|| (!salary_combined))
+        throw CmAllocationError();
+    twoTreesToArray(&(this->c_employee_by_id), &((*target)->c_employee_by_id), &id_combined);
+    twoTreesToArray(&(this->c_employee_by_salary), &((*target)->c_employee_by_salary), &salary_combined);
+    this->c_employee_by_id.emptyTree();
+    this->c_employee_by_salary.emptyTree();
+    this->c_employee_by_id.arrayToTree(&id_combined,new_size+1);
+    this->c_employee_by_salary.arrayToTree(&salary_combined,new_size+1);
     this->setSize(new_size);
-    this->setValue(temp->getValue());
+    this->setValue(new_value);
 }

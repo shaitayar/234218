@@ -107,9 +107,7 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     if (acquirer_value<(10*target_value))
         throw EmFailure();
     double new_value = (acquirer->obj->getValue() +target->obj->getValue())*Factor;
-    Company* temp = new Company(acquirer->obj->getID(), int(new_value));
-    if (!temp)
-        throw EmAllocationError();
-    acquirer->obj->merge(target, temp);
+    acquirer->obj->merge(&(target->obj), new_value);
+    target->obj->EmptyCompany();
     this->RemoveCompany(TargetID);
 }
