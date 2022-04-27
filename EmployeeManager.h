@@ -16,8 +16,8 @@ class EmployeeManager {
     AvlTree <Company, CompCompanyById> company_by_id;
 
 
-
 public:
+
     EmployeeManager():ed(), es(),cd(), employee_by_id(ed), employee_by_salary(es),
                        company_by_id(cd){};
 

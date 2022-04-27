@@ -94,7 +94,9 @@ void EmployeeManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease)
     node->obj->setValue(curr_value+ValueIncrease);
 }
 
-void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor)
+
+
+void AcquireCompany(int AcquirerID, int TargetID, double Factor)
 {
     if ((AcquirerID<=0)||(TargetID<=0)||(AcquirerID==TargetID)||(Factor<1))
         throw EmInvalidInput();
@@ -106,8 +108,8 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     int acquirer_value = acquirer->obj->getValue();
     if (acquirer_value<(10*target_value))
         throw EmFailure();
+    Employee** combined = treesToArray(acquirer, target);
     double new_value = (acquirer_value +target_value)*Factor;
-    Company* company = new Company(acquirer->obj->getID(), new_value);
+    Company* company = new Company(acquirer->obj->getID(), int(new_value));
 
-    return;
 }
