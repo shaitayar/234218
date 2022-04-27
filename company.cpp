@@ -30,7 +30,7 @@ void Company::addEmployee(Employee *employee){
 
 void Company::setValue(int new_value)
 {
-    this->value = value+new_value;
+    this->value += new_value;
 }
 
 void Company::RemoveEmployee(int employeeID)
