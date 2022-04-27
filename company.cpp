@@ -40,3 +40,7 @@ void Company::RemoveEmployee(int employeeID)
     max_sal_emp = c_employee_by_salary.getMaxNode();
 
 }
+
+void Company::printToList(int ** arr){
+    c_employee_by_salary.printToList(arr);
+}

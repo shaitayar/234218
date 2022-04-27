@@ -40,6 +40,7 @@ public:
 
     void RemoveEmployee(int employeeID);
 
+    void printToList(int ** arr);
 
     void print() const{
         std::cout<<getID()<<std::endl;

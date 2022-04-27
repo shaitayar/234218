@@ -130,3 +130,26 @@ void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID){
         *EmployeeID = comp->getMax();
     }
 }
+
+void EmployeeManager::GetAllEmployeesBySalary(int CompanyID, int **Employees, int *NumOfEmployees){
+    if (CompanyID<0){
+        *Employees = (int*)std::malloc(employee_num*sizeof(int));
+        if(!Employees) throw EmAllocationError();
+        employee_by_salary.printToList(Employees);
+        *NumOfEmployees=employee_num;
+    }
+    else if(CompanyID>0){
+        auto node = company_by_id.find(CompanyID);
+        if (!node) throw EmFailure();
+        Company * comp = node->obj;
+        *Employees = (int*)std::malloc(comp->getSize()*sizeof(int));
+        if(!Employees) throw EmAllocationError();
+        comp->printToList(Employees);
+        *NumOfEmployees = comp->getSize();
+    }
+}
+
+void EmployeeManager::GetHighestEarnerInEachCompany(int NumOfCompanies, int **Employees){
+
+}
+

@@ -54,6 +54,10 @@ public:
 
     void GetHighestEarner(int CompanyID, int *EmployeeID);
 
+    void GetAllEmployeesBySalary(int CompanyID, int **Employees, int *NumOfEmployees);
+
+    void GetHighestEarnerInEachCompany(int NumOfCompanies, int **Employees);
+
 
     class EmException: public std::exception{};
     class EmFailure: public EmException{};

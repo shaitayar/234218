@@ -194,16 +194,28 @@ StatusType GetHighestEarner(void *DS, int CompanyID, int *EmployeeID) {
 StatusType GetAllEmployeesBySalary(void *DS, int CompanyID, int **Employees, int *NumOfEmployees) {
     if (DS == NULL || CompanyID == 0 || Employees == NULL || NumOfEmployees==NULL) return INVALID_INPUT;
     try {
-        ((EmployeeManager *) DS)->GetAllEmployeesBySalary(CompanyId, Employees, NumOfEmployees);
+        ((EmployeeManager *) DS)->GetAllEmployeesBySalary(CompanyID, Employees, NumOfEmployees);
+    }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
+    catch (EmployeeManager::EmAllocationError& e) {
+        return ALLOCATION_ERROR;
+    }
+    return SUCCESS;
+}
+
+
+StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Employees){
+    if (DS == NULL || NumOfCompanies < 1 || Employees == NULL) return INVALID_INPUT;
+    try {
+        ((EmployeeManager *) DS)->GetHighestEarnerInEachCompany(NumOfCompanies, Employees);
     }
     catch (EmployeeManager::EmFailure &e) {
         return FAILURE;
     }
     return SUCCESS;
 }
-
-
-StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Employees);
 
 StatusType GetNumEmployeesMatching(void *DS, int CompanyID, int MinEmployeeID, int MaxEmployeeId,
                                    int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees);
