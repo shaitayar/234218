@@ -78,6 +78,7 @@ public:
                   int *TotalNumOfEmployees, int *NumOfEmployees);
     void treeToArr(T ** arr);
 
+    void arrToTree(T ** arr);
 };
 
 /*** AVL Implementation */
@@ -433,6 +434,11 @@ int treeToArrAUX(Node<T,L> * root, T ** arr, int index){
 template<class T, class L>
 void AvlTree<T, L>::treeToArr(T ** arr){
     treeToArrAUX(root, arr, 0);
+}
+
+template<class T, class L>
+void AvlTree<T, L>::arrToTree(T ** arr){
+
 }
 
 

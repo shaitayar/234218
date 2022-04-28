@@ -57,3 +57,7 @@ void Company::TreeToArray(Employee ** empByIDTarget,Employee **empBySalaryTarget
     c_employee_by_id.treeToArr(empByIDTarget);
     c_employee_by_salary.treeToArr(empBySalaryTarget);
 }
+void Company::ArrayToTree(Employee ** combinedID, Employee ** combinedSalary){
+    c_employee_by_id.arrToTree(combinedID, this);
+    c_employee_by_salary.arrToTree();
+}
