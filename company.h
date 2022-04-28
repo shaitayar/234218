@@ -48,6 +48,10 @@ public:
     void getMatchCompany(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
                          int MinGrade,
                          int *TotalNumOfEmployees, int *NumOfEmployees);
+    void TreeToArray(Employee ** empByIDTarget,Employee **empBySalaryTarget);
+
+    void ArrayToTree(Employee ** combinedID, Employee ** combinedSalary);
+
 };
 
 class CompCompanyById {

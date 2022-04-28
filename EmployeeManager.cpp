@@ -76,7 +76,7 @@ void EmployeeManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, int Bu
     if (BumpGrade > 0) {
         emp->setGrade();
     }
-    Company * company = emp->getCompany();
+    Company *company = emp->getCompany();
     company->RemoveEmployee(EmployeeID);
     company->addEmployee(emp);
     employee_by_salary.deleteNode(EmployeeID);
@@ -114,8 +114,74 @@ void EmployeeManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease) {
     node->obj->setValue(ValueIncrease);
 }
 
+template <class L>
+void merge(Employee **X, int x_size, Employee **Y, int y_size, Employee **result, L compare) {
+    int i = 0, j = 0, k = 0;
+    while ((i < x_size) && (j < y_size)) {
+        if (compare(X[i], Y[j]) > 0) {
+            result[k] = (Y[j]);
+            k++;
+            j++;
+        } else {
+            result[k] = (X[i]);
+            k++;
+            i++;
+        }
+    }
+    while (i < x_size) {
+        result[k] = (X[i]);
+        k++;
+        i++;
+    }
+    while (j < y_size) {
+        result[k] = (Y[j]);
+        k++;
+        j++;
+    }
+}
+
+
 void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor) {
-    return;
+    auto acquirer = company_by_id.find(AcquirerID);
+    auto target = company_by_id.find(TargetID);
+    if (!acquirer || !target) throw EmFailure();
+    int target_value = target->obj->getValue();
+    int acquirer_value = acquirer->obj->getValue();
+    if (acquirer_value < target_value * 10) return;
+    int new_value = (acquirer_value + target_value) * Factor;
+    int tsize = target->obj->getSize();
+    int asize = acquirer->obj->getSize();
+
+    Company *new_company = new Company(AcquirerID, new_value);
+    if (!new_company) throw EmAllocationError();
+
+    Employee **empByIDTarget = (Employee **) malloc(sizeof(**empByIDTarget) * tsize);
+    Employee **empBySalaryTarget = (Employee **) malloc(sizeof(**empBySalaryTarget) * tsize);
+    Employee **empByIDAcq = (Employee **) malloc(sizeof(**empByIDAcq) * asize);
+    Employee **empBySalaryAcq = (Employee **) malloc(sizeof(**empBySalaryAcq) * asize);
+    Employee **combinedID = (Employee **) malloc(sizeof(**combinedID) * (tsize + asize));
+    Employee **combinedSalary = (Employee **) malloc(sizeof(**combinedSalary) * (tsize + asize));
+
+    if(!empByIDTarget ||!empBySalaryTarget||!empByIDAcq||!empBySalaryAcq ||combinedID ||combinedSalary){
+        free(empByIDTarget);
+        free(empBySalaryTarget);
+        free(empByIDAcq);
+        free(empBySalaryAcq);
+        free(combinedID);
+        free(combinedSalary);
+        delete new_company;
+        throw EmAllocationError();
+    }
+
+    (target->obj)->TreeToArray(empByIDTarget, empBySalaryTarget);
+    (acquirer->obj)->TreeToArray(empByIDAcq, empBySalaryAcq);
+
+    CompEmployeeById ci;
+    CompEmployeeBySalary cs;
+    merge<CompEmployeeById>(empByIDTarget, tsize, empByIDAcq, asize, combinedID, ci);
+    merge<CompEmployeeBySalary>(empBySalaryTarget, tsize, empBySalaryAcq, asize, combinedSalary, cs);
+
+    new_company->ArrayToTree(combinedID, combinedSalary);
 }
 
 void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID) {
@@ -158,23 +224,22 @@ void EmployeeManager::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, 
                                               int MinGrade,
                                               int *TotalNumOfEmployees, int *NumOfEmployees) {
 
-    *TotalNumOfEmployees=0;
-    *NumOfEmployees=0;
+    *TotalNumOfEmployees = 0;
+    *NumOfEmployees = 0;
 
-    if (CompanyID<0){
+    if (CompanyID < 0) {
         employee_by_id.getMatch(MinEmployeeID, MaxEmployeeId, MinSalary,
-                MinGrade,TotalNumOfEmployees, NumOfEmployees);
+                                MinGrade, TotalNumOfEmployees, NumOfEmployees);
     }
-    if(CompanyID>0){
+    if (CompanyID > 0) {
         auto node = company_by_id.find(CompanyID);
         if (!node) throw EmFailure();
-        Company * company = node->obj;
-        if(company->getSize()==0){
+        Company *company = node->obj;
+        if (company->getSize() == 0) {
             return;
-        }
-        else{
+        } else {
             company->getMatchCompany(MinEmployeeID, MaxEmployeeId, MinSalary,
-                                     MinGrade,TotalNumOfEmployees, NumOfEmployees);
+                                     MinGrade, TotalNumOfEmployees, NumOfEmployees);
         }
     }
 }

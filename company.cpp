@@ -52,3 +52,8 @@ void Company::getMatchCompany(int MinEmployeeID, int MaxEmployeeId, int MinSalar
     c_employee_by_id.getMatch(MinEmployeeID, MaxEmployeeId, MinSalary,
                                MinGrade,TotalNumOfEmployees, NumOfEmployees);
 }
+
+void Company::TreeToArray(Employee ** empByIDTarget,Employee **empBySalaryTarget){
+    c_employee_by_id.treeToArr(empByIDTarget);
+    c_employee_by_salary.treeToArr(empBySalaryTarget);
+}

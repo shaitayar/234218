@@ -1,14 +1,11 @@
-#include "AvlTree.h"
 #include "iostream"
-#include "employee.h"
-#include "company.h"
+#include "EmployeeManager.h"
 
 using std::string;
 
 
 int main() {
-    CompEmployeeById c;
-    AvlTree<Employee,CompEmployeeById> tree(c);
+    EmployeeManager em1;
     Company c1(10,100);
     Company c2 (20,200);
     Employee e1(1, 100, 1, (&c1));
@@ -22,22 +19,17 @@ int main() {
     Employee e9(9, 1000, 9, (&c1));
     Employee e10(10, 1000, 10, (&c1));
 
-    tree.insert(&e3);
-    tree.insert(&e4);
-    tree.insert(&e1);
-    tree.insert(&e2);
-    tree.insert(&e2);
-    tree.insert(&e5);
-    tree.insert(&e7);
-    tree.insert(&e8);
-    tree.insert(&e6);
-    tree.insert(&e9);
-    tree.insert(&e10);
-    int x=0;
-    int * total_num=&x;
-    int y = 0;
-    int * num = &y;
-    tree.getMatch(3,7,700,2,total_num,num);
-    std::cout<<"total: "<<*total_num << "\nnum: "<<*num<<std::endl;
+    em1.AddCompany(10,100);
+    em1.AddCompany(20,1500);
+    em1.AddEmployee(1,10,100,1);
+    em1.AddEmployee(2,10,200,1);
+    em1.AddEmployee(3,10,300,1);
+
+    em1.AddEmployee(4,20,400,1);
+    em1.AddEmployee(5,20,400,1);
+    em1.AddEmployee(6,20,400,1);
+    em1.AddEmployee(7,20,400,1);
+
+    em1.AcquireCompany(20,10,1.5);
     return 0;
 }

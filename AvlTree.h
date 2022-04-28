@@ -76,6 +76,7 @@ public:
     void getMatch(int MinEmployeeID, int MaxEmployeeID, int MinSalary,
                   int MinGrade,
                   int *TotalNumOfEmployees, int *NumOfEmployees);
+    void treeToArr(T ** arr);
 
 };
 
@@ -418,6 +419,22 @@ void AvlTree<T, L>::getMatch(int MinEmployeeID, int MaxEmployeeID, int MinSalary
                              int *TotalNumOfEmployees, int *NumOfEmployees) {
     inorderRange(root ,MinEmployeeID, MaxEmployeeID, MinSalary, MinGrade, TotalNumOfEmployees, NumOfEmployees);
 }
+
+template<class T, class L>
+int treeToArrAUX(Node<T,L> * root, T ** arr, int index){
+    if (root == NULL) return index;
+    index = treeToArrAUX(root->left_son, arr, index);
+    (arr)[index++] = root->obj;
+    index = treeToArrAUX(root->right_son, arr, index);
+
+    return index;
+}
+
+template<class T, class L>
+void AvlTree<T, L>::treeToArr(T ** arr){
+    treeToArrAUX(root, arr, 0);
+}
+
 
 #endif
 
