@@ -169,7 +169,8 @@ void EmployeeManager::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, 
             return;
         }
         else{
-            company->getMatchCompany();
+            company->getMatchCompany(MinEmployeeID, MaxEmployeeId, MinSalary,
+                                     MinGrade,TotalNumOfEmployees, NumOfEmployees);
         }
     }
 }
