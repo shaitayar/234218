@@ -21,7 +21,13 @@ public:
     int getSalary() const;
     int getGrade() const;
     Company* getCompany() const;
+
+    void setSalary(int SalaryIncrease);
+
+    void setGrade();
+
     void setCompany(Company* new_company){this->p_company = new_company;}
+
     void print() const{
         std::cout<<getID()<<std::endl;
     }
@@ -52,7 +58,11 @@ public:
     int operator()(Employee * e1, Employee * e2) const{
         int s1 = e1->getSalary();
         int s2 = e2->getSalary();
-        if (s1 >= s2) return 1;
+        if (s1 == s2){
+            CompEmployeeById c;
+            return c(e2,e1);
+        }
+        else if(s1>s2) return 1;
         else return -1;
     }
 

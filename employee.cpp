@@ -21,6 +21,11 @@ Company* Employee::getCompany() const{
     return p_company;
 }
 
+void Employee::setSalary(int SalaryIncrease) {
+    salary+=SalaryIncrease;
+}
 
-
+void Employee::setGrade(){
+    grade+=1;
+}
 

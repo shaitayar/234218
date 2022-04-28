@@ -23,24 +23,25 @@ template<class T, class L>
 class AvlTree {
     Node<T, L> *root;
     L compare;
+    int size;
 
     /**HELP FUNCTIONS*/
-    Node<T, L> *addNode(Node<T, L> *node, T *obj);
+    Node<T, L> *addNode(Node<T, L> *node, T *obj, bool * is_success);
 
     Node<T, L> *RightRotate(Node<T, L> *r);
 
     Node<T, L> *LeftRotate(Node<T, L> *r);
 
-    Node<T, L> *RemoveNode(Node<T, L> *node, int NodeID);
+    Node<T, L> *RemoveNode(Node<T, L> *node, int NodeID, bool * is_success);
 
     Node<T, L> *balance(Node<T, L> *node);
 
 
 public:
 
-    AvlTree(L compare) : compare(compare), root(NULL) {};
+    explicit AvlTree(L compare) : compare(compare), root(NULL), size(0) {};
 
-    ~AvlTree()=default;
+    ~AvlTree() = default;
 
     void DestroyTree();
 
@@ -60,25 +61,55 @@ public:
 
     Node<T, L> *find(int NodeID);
 
-    void preOrder() const;
+    Node<T, L> *getMaxNode();
 
     void print() const;
 
+    void printToList(int **) const;
+
     void inorder(Node<T, L> *) const;
 
-    void postOrder() const;
+    int getSize() const {return size;}
 
+    void getNMax(int, int**);
+
+    void getMatch(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
+                  int MinGrade,
+                  int *TotalNumOfEmployees, int *NumOfEmployees);
 
     friend void twoTreesToArray(const AvlTree<T,L> *avl1,const AvlTree<T,L> *avl2, T*** combined);
-    void arrayToTree ( T*** arr, int arr_size);
-    class AvlException: public std::exception{};
-    class AvlAllocationError: public AvlException{};
+
+    void arrayToTree(T ***arr, int arr_size);
 
     void emptyTree();
+
+    class AvlException : public std::exception {};
+
+    class AvlAllocationError : public AvlException {};
 };
 
 /*** AVL Implementation */
+template<class T, class L>
+int getNMaxAux(Node<T,L>* root, int ** Employees, int n, int counter){
+    if (root==NULL || counter==n) return counter;
+    counter = getNMaxAux(root->left_son, Employees, n, counter);
+    (*Employees)[counter++] = root->obj->getMax();
+    return counter;
+}
 
+template<class T, class L>
+void AvlTree<T,L>::getNMax(int n, int ** Employees){
+    getNMaxAux(root, Employees, n, 0);
+}
+
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::getMaxNode() {
+    Node<T, L> *iter = root;
+    while (iter && iter->right_son) {
+        iter = iter->right_son;
+    }
+    return iter;
+}
 
 template<class T, class L>
 int calcBF(Node<T, L> *node) {
@@ -130,12 +161,16 @@ Node<T, L> *createNode(T *obj) {
 
 template<class T, class L>
 void AvlTree<T, L>::insert(T *obj) {
-    root = addNode(root, obj);
+    bool is_success = false;
+    root = addNode(root, obj, &is_success);
+    if (is_success) size++;
 }
 
 template<class T, class L>
 void AvlTree<T, L>::deleteNode(int NodeID) {
-    root = RemoveNode(root, NodeID);
+    bool is_success = false;
+    root = RemoveNode(root, NodeID, &is_success);
+    if (is_success) size--;
 }
 
 template<class T, class L>
@@ -153,43 +188,40 @@ Node<T, L> *find_minimal(Node<T, L> *node) {
  * complexity: O(logn)
  */
 template<class T, class L>
-Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
+Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID, bool * is_success) {
     if (node == NULL) return node;
 
     //if node key is bigger than NodeID - then left subtree
-    if (compare(node->obj, NodeID) > 0) {
-        node->left_son = RemoveNode(node->left_son, NodeID);
-    } else if (compare(node->obj, NodeID) < 0) {
-        node->right_son = RemoveNode(node->right_son, NodeID);
+    if (node->obj->getID() > NodeID) {
+        node->left_son = RemoveNode(node->left_son, NodeID, is_success);
+    } else if (node->obj->getID() < NodeID) {
+        node->right_son = RemoveNode(node->right_son, NodeID, is_success);
     }
         //find the Node to delete
     else {
+        *is_success=true;
         //node has one or zero sons
         if (!node->left_son || !node->right_son) {
             //has left
             if (node->left_son) {
                 Node<T, L> *temp = node->left_son;
-                T *obj_to_del = node->obj;
                 node->obj = temp->obj;
                 /**not necessary*/
                 node->left_son = temp->left_son;
                 node->right_son = temp->right_son;
 
-                delete obj_to_del;
                 delete temp;
 
             }
-            //has right
+                //has right
             else if (node->right_son) {
 
                 Node<T, L> *temp = node->right_son;
-                T *obj_to_del = node->obj;
                 node->obj = temp->obj;
                 /**not necessary*/
                 node->left_son = temp->left_son;
                 node->right_son = temp->right_son;
 
-                delete obj_to_del;
                 delete temp;
 
             }
@@ -197,22 +229,20 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, int NodeID) {
             else {
                 Node<T, L> *temp;
                 temp = node;
-                node=NULL;
-
-                //delete temp->obj;
+                node = NULL;
                 delete temp;
             }
         }
             //node has two sons
         else {
             //o(log (current node height))
+            *is_success=true;
             Node<T, L> *temp = find_minimal(node->right_son);
-            std::cout<<"here!"<<std::endl;
             node->obj = temp->obj;
-            node->right_son = RemoveNode(node->right_son, node->obj->getID());
+            node->right_son = RemoveNode(node->right_son, node->obj->getID(), is_success);
         }
     }
-    if (node==NULL) return node;
+    if (node == NULL) return node;
     node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
     return balance(node);
 }
@@ -225,14 +255,15 @@ int AvlTree<T, L>::calcHeight(Node<T, L> *node) {
 }
 
 template<class T, class L>
-Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj) {
+Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj, bool * is_success) {
     if (node == NULL) {
         node = createNode<T, L>(obj);
+        *is_success=true;
     } else if (compare(obj, node->obj) > 0) {
-        node->right_son = addNode(node->right_son, obj);
+        node->right_son = addNode(node->right_son, obj, is_success);
         (node->right_son)->father = node;
     } else if (compare(obj, node->obj) < 0) {
-        node->left_son = addNode(node->left_son, obj);
+        node->left_son = addNode(node->left_son, obj, is_success);
         (node->left_son)->father = node;
     }
 
@@ -243,22 +274,7 @@ Node<T, L> *AvlTree<T, L>::addNode(Node<T, L> *node, T *obj) {
 
 //update height
     node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
-
     return balance(node);
-    /*if (calcBF(node) == 2) {
-        if (calcBF(node->left_son) >= 0) {
-            return LLRotate(node);
-        } else if (calcBF(node->left_son) == -1) {
-            return LRRotate(node);
-        }
-    } else if (calcBF(node) == -2) {
-        if (calcBF(node->right_son) <= 0) {
-            return RRRotate(node);
-        } else if (calcBF(node->right_son) == 1) {
-            return RLRotate(node);
-        }
-    }*/
-
 }
 
 template<class T, class L>
@@ -349,10 +365,24 @@ void AvlTree<T, L>::inorder(Node<T, L> *p) const {
 }
 
 template<class T, class L>
+int inorder_back(Node<T, L> *p, int **keys, int index) {
+    if (p == NULL) return index;
+    index = inorder_back(p->right_son, keys, index);
+    (*keys)[index++] = p->obj->getID();
+    index= inorder_back(p->left_son, keys, index);
+
+    return index;
+}
+
+template<class T, class L>
 void AvlTree<T, L>::print() const {
     inorder(root);
 }
 
+template<class T, class L>
+void AvlTree<T, L>::printToList(int **keys) const {
+    inorder_back(root, keys, 0);
+}
 
 
 template<class T, class L>
@@ -365,8 +395,15 @@ void DestroyTreeAux(Node<T, L> *node) {
 }
 
 template<class T, class L>
-void AvlTree<T,L>::DestroyTree(){
+void AvlTree<T, L>::DestroyTree() {
     DestroyTreeAux(root);
+}
+
+template<class T, class L>
+void AvlTree<T,L>::getMatch(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
+                            int MinGrade,
+                            int *TotalNumOfEmployees, int *NumOfEmployees){
+
 }
 
 template<class T, class L>
@@ -406,8 +443,8 @@ void treeToArray(const Node<T, L>* root, T* arr)
 template<class T, class L>
 void twoTreesToArray(const AvlTree<T,L> *avl1,const AvlTree<T,L> *avl2, T*** combined)
 {
-    T* arr1 = new T [avl1->getSize()];
-    T* arr2 = new T [avl2->getSize()];
+    T** arr1 = new T* [avl1->getSize()];
+    T** arr2 = new T* [avl2->getSize()];
     if ((!arr1) || (!arr2))
         throw AvlTree<T, L>::AvlAllocationError();
     treeToArray(&(avl1->root),&arr1);

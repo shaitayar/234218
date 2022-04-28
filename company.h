@@ -14,13 +14,14 @@ class Company {
     int ID;
     int value;
     int size;
+    Node<Employee,CompEmployeeBySalary> * max_sal_emp;
     CompEmployeeById ed;
     CompEmployeeBySalary es;
     AvlTree<Employee, CompEmployeeById> c_employee_by_id;
     AvlTree<Employee, CompEmployeeBySalary> c_employee_by_salary;
 
 public:
-    Company(int ID, int value) : ID(ID), value(value), size(0), ed(), es(), c_employee_by_id(ed),
+    Company(int ID, int value) : ID(ID), value(value), size(0), max_sal_emp(NULL), ed(), es(), c_employee_by_id(ed),
                                  c_employee_by_salary(es) {};
 
     ~Company();
@@ -31,22 +32,30 @@ public:
 
     int getSize() const;
 
-    void setValue(int new_value);
+    int getMax();
+
+    void setValue(int value);
 
     void addEmployee(Employee *);
 
     void RemoveEmployee(int employeeID);
 
-    void merge(Company** target,int new_value);
+    void printToList(int ** arr);
 
     void print() const{
         std::cout<<getID()<<std::endl;
     }
-
-    class CmException: public std::exception{};
-    class CmAllocationError: public CmException{};
+    void getMatchCompany(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
+                         int MinGrade,
+                         int *TotalNumOfEmployees, int *NumOfEmployees);
 
     void EmptyCompany();
+
+    void merge(Company **target, int new_value);
+
+    class CmException : public std::exception {};
+
+    class CmAllocationError : public CmException {};
 
     void setSize(int new_size);
 };
