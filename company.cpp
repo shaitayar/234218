@@ -14,6 +14,11 @@ int Company::getValue() const{
     return this->value;
 }
 
+void Company::setSize(int new_size){
+    this->size = new_size;
+
+}
+
 void Company::addEmployee(Employee *employee){
     c_employee_by_id.insert(employee);
     c_employee_by_salary.insert(employee);

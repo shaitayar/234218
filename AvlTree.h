@@ -68,13 +68,13 @@ public:
 
     void postOrder() const;
 
-    void emptyTree();
 
     friend void twoTreesToArray(const AvlTree<T,L> *avl1,const AvlTree<T,L> *avl2, T*** combined);
     void arrayToTree ( T*** arr, int arr_size);
     class AvlException: public std::exception{};
     class AvlAllocationError: public AvlException{};
 
+    void emptyTree();
 };
 
 /*** AVL Implementation */
@@ -394,7 +394,7 @@ void merge(T* X, int x_size, T* Y,int y_size, T* result){
 }
 
 template<class T, class L>
-void treeToArray(const Node<T, L>* root, Node<T, L>* arr)
+void treeToArray(const Node<T, L>* root, T* arr)
 {
     if(root){
         treeToArray(&(root->left_son), &arr);
@@ -416,16 +416,16 @@ void twoTreesToArray(const AvlTree<T,L> *avl1,const AvlTree<T,L> *avl2, T*** com
 }
 
 template<class T, class L>
-Node<T, L>* connect (const T* arr, int start, int end, int h){
+Node<T, L>* connect (T**** arr, int start, int end, int h){
     if (start > end)
         return NULL;
     int mid = (start + end)/2;
-    Node<T, L>* root = &(arr[mid]);
+    Node<T, L>* root = createNode<T,L>(&(***arr[mid]));
     root->father = NULL;
-    root->left_son = connect(&arr, start, mid-1, h++);
-    root->left_son->father = &root;
-    root->right_son = connect(&arr, mid+1, end, h++);
-    root->right_son->father = &root;
+    root->left_son = connect<T,L>(&(arr[mid]), start, mid-1, h++);
+    root->left_son->father = &(*root);
+    root->right_son = connect<T,L>(&arr[mid], mid+1, end, h++);
+    root->right_son->father =&(*root);
     root->height = h;
     return root;
 }
@@ -434,23 +434,30 @@ Node<T, L>* connect (const T* arr, int start, int end, int h){
 template<class T, class L>
 void AvlTree<T, L>::arrayToTree (T*** arr, int arr_size)
 {
-    this->root = connect(&arr, 1, arr_size, 0);
+    this->root = connect<T,L>(&arr, 1, arr_size, 0);
 }
 
 
 
-
+template<class T, class L>
+void emptyTreeAux(Node<T, L>* root)
+{
+    if (root)
+    {
+        emptyTreeAux(root->left_son);
+        root->left_son = NULL;
+        emptyTreeAux(root->right_son);
+        root->right_son = NULL;
+        root->father =NULL;
+    }
+}
 
 template<class T, class L>
 void AvlTree<T, L>::emptyTree()
 {
     if (this->root)
     {
-        emptyTree(this->root->left_son);
-        this->root->left_son = NULL;
-        emptyTree(this->root->right_son);
-        this->root->right_son = NULL;
-        this->root->father =NULL;
+        emptyTreeAux(this->root);
     }
 }
 

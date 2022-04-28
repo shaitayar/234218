@@ -47,6 +47,8 @@ public:
     class CmAllocationError: public CmException{};
 
     void EmptyCompany();
+
+    void setSize(int new_size);
 };
 
 class CompCompanyById {
