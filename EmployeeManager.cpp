@@ -76,6 +76,11 @@ void EmployeeManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, int Bu
     if (BumpGrade > 0) {
         emp->setGrade();
     }
+    Company * company = emp->getCompany();
+    company->RemoveEmployee(EmployeeID);
+    company->addEmployee(emp);
+    employee_by_salary.deleteNode(EmployeeID);
+    employee_by_salary.insert(emp);
 }
 
 
@@ -106,7 +111,6 @@ void EmployeeManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease) {
     auto node = company_by_id.find(CompanyID);
     if (node == NULL)
         throw EmFailure();
-    int curr_value = node->obj->getValue();
     node->obj->setValue(ValueIncrease);
 }
 
@@ -176,5 +180,5 @@ void EmployeeManager::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, 
 }
 
 void EmployeeManager::Quit() {
-    return;
+
 }
