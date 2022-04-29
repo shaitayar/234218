@@ -140,6 +140,11 @@ void merge(Employee **X, int x_size, Employee **Y, int y_size, Employee **result
     }
 }
 
+void update_company(Employee ** arr,int size, Company * comp){
+    for (int i = 0; i < size; ++i) {
+        arr[i]->setCompany(comp);
+    }
+}
 
 void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor) {
     auto acquirer = company_by_id.find(AcquirerID);
@@ -147,7 +152,7 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     if (!acquirer || !target) throw EmFailure();
     int target_value = target->obj->getValue();
     int acquirer_value = acquirer->obj->getValue();
-    if (acquirer_value < target_value * 10) return;
+    if (acquirer_value < target_value * 10) throw EmFailure();
     int new_value = (acquirer_value + target_value) * Factor;
     int tsize = target->obj->getSize();
     int asize = acquirer->obj->getSize();
@@ -162,7 +167,7 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     Employee **combinedID = (Employee **) malloc(sizeof(**combinedID) * (tsize + asize));
     Employee **combinedSalary = (Employee **) malloc(sizeof(**combinedSalary) * (tsize + asize));
 
-    if(!empByIDTarget ||!empBySalaryTarget||!empByIDAcq||!empBySalaryAcq ||combinedID ||combinedSalary){
+    if(!empByIDTarget ||!empBySalaryTarget||!empByIDAcq||!empBySalaryAcq ||!combinedID ||!combinedSalary){
         free(empByIDTarget);
         free(empBySalaryTarget);
         free(empByIDAcq);
@@ -181,7 +186,13 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     merge<CompEmployeeById>(empByIDTarget, tsize, empByIDAcq, asize, combinedID, ci);
     merge<CompEmployeeBySalary>(empBySalaryTarget, tsize, empBySalaryAcq, asize, combinedSalary, cs);
 
-    new_company->ArrayToTree(combinedID, combinedSalary);
+    update_company(combinedID,tsize+asize, new_company);
+
+    new_company->ArrayToTree(combinedID, combinedSalary, tsize+asize);
+
+    new_company->print();
+
+
 }
 
 void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID) {

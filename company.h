@@ -43,14 +43,14 @@ public:
     void printToList(int ** arr);
 
     void print() const{
-        std::cout<<getID()<<std::endl;
+        c_employee_by_id.print();
     }
     void getMatchCompany(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
                          int MinGrade,
                          int *TotalNumOfEmployees, int *NumOfEmployees);
     void TreeToArray(Employee ** empByIDTarget,Employee **empBySalaryTarget);
 
-    void ArrayToTree(Employee ** combinedID, Employee ** combinedSalary);
+    void ArrayToTree(Employee ** combinedID, Employee ** combinedSalary, int size);
 
 };
 
