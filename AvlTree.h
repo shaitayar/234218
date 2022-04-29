@@ -381,8 +381,8 @@ void AvlTree<T, L>::printToList(int **keys) const {
 template<class T, class L>
 void DestroyTreeAux(Node<T, L> *node) {
     if (!node) return;
-    DestroyTreeAux(node->right_son);
-    DestroyTreeAux(node->left_son);
+    if (node->right_son) DestroyTreeAux(node->right_son);
+    if(node->left_son) DestroyTreeAux(node->left_son);
     //delete node->obj;
     delete node;
 }

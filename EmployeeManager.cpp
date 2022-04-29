@@ -189,9 +189,10 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     update_company(combinedID,tsize+asize, new_company);
 
     new_company->ArrayToTree(combinedID, combinedSalary, tsize+asize);
-
-    delete target;
-    delete acquirer;
+    delete target->obj;
+    delete acquirer->obj;
+    this->RemoveCompany(TargetID) ;
+    this->RemoveCompany(AcquirerID) ;
 
     this->company_by_id.insert(new_company);
     if (new_company->getSize()>0) this->company_not_empty.insert(new_company);
