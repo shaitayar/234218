@@ -3,10 +3,10 @@
 using std::exception;
 
 EmployeeManager::~EmployeeManager() {
-    employee_by_id.DestroyTree();
-    employee_by_salary.DestroyTree();
-    company_by_id.DestroyTree();
-    company_not_empty.DestroyTree();
+    employee_by_id.DestroyTree(false);
+    employee_by_salary.DestroyTree(false);
+    company_not_empty.DestroyTree(false);
+    company_by_id.DestroyTree(true);
 
 }
 
@@ -20,6 +20,7 @@ void EmployeeManager::AddCompany(int CompanyID, int Value) {
 
 void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade) {
     Node<Company, CompCompanyById> *c = company_by_id.find(CompanyID);
+    if (!c) throw EmFailure();
     Employee *employee = new Employee(EmployeeID, Salary, Grade, (c->obj));
     if (!employee) throw EmAllocationError();
     if (employee_by_id.find(EmployeeID) != NULL) {
@@ -32,17 +33,18 @@ void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int
     max_employee = employee_by_salary.getMaxNode();
     company_not_empty.insert(c->obj);
 }
-
+/***fix!!! remove employee in company!!!! salary*/
 void EmployeeManager::RemoveEmployee(int EmployeeID) {
     auto node = employee_by_id.find(EmployeeID);
+    if (!node) throw EmFailure();
     Employee *employee = node->obj;
     Company *company = employee->getCompany();
-    employee_by_id.deleteNode(EmployeeID);
-    company->RemoveEmployee(EmployeeID);
+    employee_by_id.deleteNode(node->obj,false);
+    employee_by_salary.deleteNode(node->obj, false);
+    company->RemoveEmployee(node->obj, true);
 
-    delete employee;
     max_employee = employee_by_salary.getMaxNode();
-    if (company->getSize() == 0) company_not_empty.deleteNode(company->getID());
+    if (company->getSize() == 0) company_not_empty.deleteNode(company,false);
 }
 
 void EmployeeManager::RemoveCompany(int CompanyID) {
@@ -52,9 +54,8 @@ void EmployeeManager::RemoveCompany(int CompanyID) {
 
     //If company has workers
     if (company->getSize() != 0) throw EmFailure();
-    company_by_id.deleteNode(CompanyID);
-    company_not_empty.deleteNode(CompanyID);
-    delete company;
+    company_by_id.deleteNode(company,false);
+    company_num--;
 }
 
 
@@ -77,10 +78,11 @@ void EmployeeManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, int Bu
         emp->setGrade();
     }
     Company *company = emp->getCompany();
-    company->RemoveEmployee(EmployeeID);
+    company->RemoveEmployee(emp,false);
     company->addEmployee(emp);
-    employee_by_salary.deleteNode(EmployeeID);
+    employee_by_salary.deleteNode(emp,false);
     employee_by_salary.insert(emp);
+    max_employee = employee_by_salary.getMaxNode();
 }
 
 
@@ -95,7 +97,7 @@ void EmployeeManager::HireEmployee(int EmployeeID, int NewCompanyID) {
 
     //remove from company 1 and add to company 2
     emp->setCompany(company2);
-    company1->RemoveEmployee(EmployeeID);
+    company1->RemoveEmployee(emp,false);
     company2->addEmployee(emp);
 }
 
@@ -189,14 +191,17 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     update_company(combinedID,tsize+asize, new_company);
 
     new_company->ArrayToTree(combinedID, combinedSalary, tsize+asize);
-    delete target->obj;
-    delete acquirer->obj;
+
+    target->obj->emptyCompany();
+    acquirer->obj->emptyCompany();
+
     this->RemoveCompany(TargetID) ;
     this->RemoveCompany(AcquirerID) ;
 
+    //Add company
     this->company_by_id.insert(new_company);
     if (new_company->getSize()>0) this->company_not_empty.insert(new_company);
-
+    company_num++;
 }
 
 void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID) {
@@ -257,8 +262,4 @@ void EmployeeManager::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, 
                                      MinGrade, TotalNumOfEmployees, NumOfEmployees);
         }
     }
-}
-
-void EmployeeManager::Quit() {
-
 }

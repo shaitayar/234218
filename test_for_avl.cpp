@@ -34,9 +34,14 @@ int main() {
     em1.HireEmployee(1,20);
     em1.PromoteEmployee(1,400, 2);
     em1.AcquireCompany(20,10,1.5);
-    em1.AddEmployee(1,10,100,1);
-    em1.AddEmployee(2,10,200,1);
-    em1.AddEmployee(3,10,300,1);
+    try{
+        em1.AddEmployee(1,10,100,1);
+        em1.AddEmployee(2,10,200,1);
+        em1.AddEmployee(3,10,300,1);
+    }
+    catch (EmployeeManager::EmFailure& e) {
+        std::cout<<"failure"<<std::endl;
+    }
     em1.PromoteEmployee(4,200,10);
 
 
@@ -62,7 +67,7 @@ int main() {
 
 
     em1.AddEmployee(5,10, 900, 2);
-    em1.AcquireCompany(20,10,1.5);
+    //em1.AcquireCompany(20,10,1.5);
     int *array3;
     int ptr3;
     em1.GetAllEmployeesBySalary(10, &array3, &ptr3);

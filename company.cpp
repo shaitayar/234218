@@ -1,8 +1,8 @@
 #include "company.h"
 
 Company::~Company(){
-    c_employee_by_id.DestroyTree();
-    c_employee_by_salary.DestroyTree();
+    c_employee_by_id.DestroyTree(false);
+    c_employee_by_salary.DestroyTree(true);
 }
 
 int Company::getID() const{
@@ -33,10 +33,10 @@ void Company::setValue(int new_value)
     this->value += new_value;
 }
 
-void Company::RemoveEmployee(int employeeID)
+void Company::RemoveEmployee(Employee * employee, bool is_obj)
 {
-    this->c_employee_by_id.deleteNode(employeeID);
-    this->c_employee_by_salary.deleteNode(employeeID);
+    this->c_employee_by_id.deleteNode(employee, false);
+    this->c_employee_by_salary.deleteNode(employee,is_obj);
     size--;
     max_sal_emp = c_employee_by_salary.getMaxNode();
 
@@ -61,4 +61,10 @@ void Company::TreeToArray(Employee ** empByIDTarget,Employee **empBySalaryTarget
 void Company::ArrayToTree(Employee ** combinedID, Employee ** combinedSalary, int size){
     c_employee_by_id.arrToTree(combinedID, size);
     c_employee_by_salary.arrToTree(combinedSalary, size);
+}
+
+void Company::emptyCompany(){
+    c_employee_by_id.DestroyTree(false);
+    c_employee_by_salary.DestroyTree(false);
+    size=0;
 }

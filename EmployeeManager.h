@@ -62,7 +62,7 @@ public:
     void GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeId, int MinSalary, int MinGrade,
                             int *TotalNumOfEmployees, int *NumOfEmployees);
 
-    void Quit();
+    //void Quit();
     class EmException : public std::exception {};
 
     class EmFailure : public EmException {};

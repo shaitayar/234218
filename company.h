@@ -38,7 +38,7 @@ public:
 
     void addEmployee(Employee *);
 
-    void RemoveEmployee(int employeeID);
+    void RemoveEmployee(Employee * employee, bool is_obj);
 
     void printToList(int ** arr);
 
@@ -52,6 +52,7 @@ public:
 
     void ArrayToTree(Employee ** combinedID, Employee ** combinedSalary, int size);
 
+    void emptyCompany();
 };
 
 class CompCompanyById {
