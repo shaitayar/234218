@@ -39,7 +39,7 @@ class AvlTree {
 
 public:
 
-    explicit AvlTree(L compare) : compare(compare), root(NULL), size(0) {};
+    explicit AvlTree(L compare) : root(NULL), compare(compare), size(0) {};
 
     ~AvlTree() = default;
 
@@ -497,8 +497,8 @@ int inorderFillTree(Node<T,L> * node, T** arr, int size, int index){
 
 template<class T, class L>
 void AvlTree<T, L>::arrToTree(T **arr, int size) {
-    int height_needed = std::ceil( std::log2(size));
-    int current_nodes = std::pow(2,height_needed);
+    int height_needed = ceil( log2(size));
+    int current_nodes = pow(2,height_needed);
     int nodes_to_remove = current_nodes-size-1;
     root = buildEmptyTree(height_needed, NULL);
     inorderBackRemoveExtra(root, nodes_to_remove);

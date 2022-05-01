@@ -11,9 +11,9 @@ EmployeeManager::~EmployeeManager() {
 }
 
 void EmployeeManager::AddCompany(int CompanyID, int Value) {
+    if (company_by_id.find(CompanyID) != NULL) throw EmFailure();
     Company *company = new Company(CompanyID, Value);
     if (!company) throw EmAllocationError();
-    if (company_by_id.find(CompanyID) != NULL) throw EmFailure();
     company_by_id.insert(company);
     company_num++;
 }
@@ -21,11 +21,12 @@ void EmployeeManager::AddCompany(int CompanyID, int Value) {
 void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade) {
     Node<Company, CompCompanyById> *c = company_by_id.find(CompanyID);
     if (!c) throw EmFailure();
-    Employee *employee = new Employee(EmployeeID, Salary, Grade, (c->obj));
-    if (!employee) throw EmAllocationError();
+
     if (employee_by_id.find(EmployeeID) != NULL) {
         throw EmFailure();
     }
+    Employee *employee = new Employee(EmployeeID, Salary, Grade, (c->obj));
+    if (!employee) throw EmAllocationError();
     employee_by_id.insert(employee);
     employee_by_salary.insert(employee);
     (c->obj)->addEmployee(employee);
@@ -204,6 +205,12 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     this->company_by_id.insert(new_company);
     if (new_company->getSize()>0) this->company_not_empty.insert(new_company);
     company_num++;
+    free(empByIDTarget);
+    free(empBySalaryTarget);
+    free(empByIDAcq);
+    free(empBySalaryAcq);
+    free(combinedID);
+    free(combinedSalary);
 }
 
 void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID) {
