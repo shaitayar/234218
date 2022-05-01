@@ -22,20 +22,22 @@ PromoteEmployee: SUCCESS
 GetHighestEarner: FAILURE
 GetAllEmployeesBySalary: SUCCESS. Highest earners:
 Employee Rank || Employee ID
+0 - 13
+1 - 12
 GetHighestEarnerInEachCompany: SUCCESS. Highest earners:
 Company Index || Employee ID
 0 - 11
-1 - 12
+1 - 13
 GetNumEmployeesMatching: SUCCESS. Out of 3, 2 match
 HireEmployee: SUCCESS
 GetCompanyInfo: SUCCESS. Company 1 has 2 employees and value 150
 GetCompanyInfo: FAILURE
-GetCompanyInfo: SUCCESS. Company 3 has -1 employees and value 8965
+GetCompanyInfo: SUCCESS. Company 3 has 1 employees and value 8965
 GetEmployeeInfo: SUCCESS. Employee 11 works at 1 and earns 60 at grade 70
 GetEmployeeInfo: SUCCESS. Employee 12 works at 1 and earns 600 at grade 700
 GetEmployeeInfo: SUCCESS. Employee 13 works at 3 and earns 6010 at grade 7001
 RemoveEmployee: SUCCESS
-RemoveCompany: FAILURE
+RemoveCompany: SUCCESS
 AddEmployee: FAILURE
 GetCompanyInfo: INVALID_INPUT
 GetCompanyInfo: SUCCESS. Company 1 has 2 employees and value 150
@@ -46,4 +48,7 @@ GetNumEmployeesMatching: SUCCESS. Out of 2, 2 match
 GetHighestEarnerInEachCompany: SUCCESS. Highest earners:
 Company Index || Employee ID
 0 - 12
-Quit failed
+Quit done
+#Injecting commands after Quit
+GetNumEmployeesMatching: INVALID_INPUT
+GetAllEmployeesBySalary: INVALID_INPUT

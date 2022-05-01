@@ -33,7 +33,7 @@ void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int
     max_employee = employee_by_salary.getMaxNode();
     company_not_empty.insert(c->obj);
 }
-/***fix!!! remove employee in company!!!! salary*/
+
 void EmployeeManager::RemoveEmployee(int EmployeeID) {
     auto node = employee_by_id.find(EmployeeID);
     if (!node) throw EmFailure();
@@ -194,6 +194,8 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
 
     target->obj->emptyCompany();
     acquirer->obj->emptyCompany();
+    company_not_empty.deleteNode(target->obj, false);
+    company_not_empty.deleteNode(acquirer->obj,false);
 
     this->RemoveCompany(TargetID) ;
     this->RemoveCompany(AcquirerID) ;

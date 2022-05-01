@@ -61,6 +61,9 @@ void Company::TreeToArray(Employee ** empByIDTarget,Employee **empBySalaryTarget
 void Company::ArrayToTree(Employee ** combinedID, Employee ** combinedSalary, int size){
     c_employee_by_id.arrToTree(combinedID, size);
     c_employee_by_salary.arrToTree(combinedSalary, size);
+    this->size = size;
+    max_sal_emp = c_employee_by_salary.getMaxNode();
+
 }
 
 void Company::emptyCompany(){

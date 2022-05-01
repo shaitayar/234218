@@ -238,5 +238,5 @@ StatusType GetNumEmployeesMatching(void *DS, int CompanyID, int MinEmployeeID, i
 void Quit(void **DS){
     if (DS==NULL) return ;
     delete ((EmployeeManager *) *DS);
-    DS = NULL;
+    *DS = NULL;
 }
