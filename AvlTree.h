@@ -65,7 +65,7 @@ public:
 
     void print() const;
 
-    void printToList(int **) const;
+    void printToList(int **, int size) const;
 
     void inorder(Node<T, L> *) const;
 
@@ -88,7 +88,7 @@ public:
 /*** AVL Implementation */
 template<class T, class L>
 int getNMaxAux(Node<T, L> *root, int **Employees, int n, int counter) {
-    if (root == NULL || counter == n) return counter;
+    if (root == NULL || counter >= n) return counter;
     counter = getNMaxAux(root->left_son, Employees, n, counter);
     (*Employees)[counter++] = root->obj->getMax();
     counter = getNMaxAux(root->right_son, Employees, n, counter);
@@ -237,8 +237,9 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
         else {
             //o(log (current node height))
             Node<T, L> *temp = find_minimal(node->right_son);
+            if (is_obj)delete node->obj;
             node->obj = temp->obj;
-            node->right_son = RemoveNode(node->right_son, node->obj, is_obj);
+            node->right_son = RemoveNode(node->right_son, node->obj, false);
         }
     }
     if (node == NULL) return node;
@@ -289,6 +290,7 @@ Node<T, L> *AvlTree<T, L>::LLRotate(Node<T, L> *r) {
 
 template<class T, class L>
 Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
+    //std::cout<<"Right Rotate "<<(r->obj->getID())<<std::endl;
     Node<T, L> *pb = r->left_son;
     Node<T, L> *pc = pb->right_son;
     if (r->father) {
@@ -301,6 +303,8 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     pb->right_son = r;
     this->root = pb;
     r->left_son = pc;
+    r->father = pb;
+    if(pc) pc->father = r;
 
     //update height
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
@@ -312,10 +316,11 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
 
 template<class T, class L>
 Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
+    //std::cout<<"left rotate "<<(r->obj->getID())<<std::endl;
     Node<T, L> *pb = r->right_son;
     Node<T, L> *pc = pb->left_son;
     if (r->father) {
-        if (compare(((r->father)->left_son)->obj, r->obj) == 0) {
+        if (r->father->left_son == r) {
             r->father->left_son = pb;
         } else {
             r->father->right_son = pb;
@@ -324,6 +329,9 @@ Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
     pb->left_son = r;
     this->root = pb;
     r->right_son = pc;
+    r->father = pb;
+    if(pc) pc->father = r;
+
 
     //update height
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
@@ -364,11 +372,11 @@ void AvlTree<T, L>::inorder(Node<T, L> *p) const {
 }
 
 template<class T, class L>
-int inorder_back(Node<T, L> *p, int **keys, int index) {
-    if (p == NULL) return index;
-    index = inorder_back(p->right_son, keys, index);
+int inorder_back(Node<T, L> *p, int **keys, int index, int size) {
+    if (p == NULL || index >=size) return index;
+    index = inorder_back(p->right_son, keys, index, size);
     (*keys)[index++] = p->obj->getID();
-    index = inorder_back(p->left_son, keys, index);
+    index = inorder_back(p->left_son, keys, index, size);
 
     return index;
 }
@@ -379,8 +387,8 @@ void AvlTree<T, L>::print() const {
 }
 
 template<class T, class L>
-void AvlTree<T, L>::printToList(int **keys) const {
-    inorder_back(root, keys, 0);
+void AvlTree<T, L>::printToList(int **keys, int size) const {
+    inorder_back(root, keys, 0, size);
 }
 
 
@@ -480,7 +488,6 @@ int inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove){
         if (node->father->left_son ==node) node->father->left_son = NULL;
         else if(node->father->right_son ==node) node->father->right_son = NULL;
         delete node;
-        std::cout<<"removed!"<<std::endl;
         return nodes_to_remove-1;
     }
     return nodes_to_remove;

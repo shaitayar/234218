@@ -74,15 +74,15 @@ void EmployeeManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, int Bu
     auto node = employee_by_id.find(EmployeeID);
     if (!node) throw EmFailure();
     Employee *emp = node->obj;
+    employee_by_salary.deleteNode(emp,false);
     emp->setSalary(SalaryIncrease);
+    employee_by_salary.insert(emp);
     if (BumpGrade > 0) {
         emp->setGrade();
     }
     Company *company = emp->getCompany();
-    company->RemoveEmployee(emp,false);
-    company->addEmployee(emp);
-    employee_by_salary.deleteNode(emp,false);
-    employee_by_salary.insert(emp);
+    company->promote(emp);
+
     max_employee = employee_by_salary.getMaxNode();
 }
 
@@ -95,7 +95,7 @@ void EmployeeManager::HireEmployee(int EmployeeID, int NewCompanyID) {
     auto n_company = company_by_id.find(NewCompanyID);
     if (!n_company) throw EmFailure();
     Company *company2 = n_company->obj;
-
+    if (company1->getID()==company2->getID()) throw EmFailure();
     //remove from company 1 and add to company 2
     emp->setCompany(company2);
     company1->RemoveEmployee(emp,false);
@@ -228,15 +228,17 @@ void EmployeeManager::GetAllEmployeesBySalary(int CompanyID, int **Employees, in
     if (CompanyID < 0) {
         *Employees = (int *) std::malloc(employee_num * sizeof(int));
         if (!Employees) throw EmAllocationError();
-        employee_by_salary.printToList(Employees);
+        employee_by_salary.printToList(Employees, employee_num);
         *NumOfEmployees = employee_num;
     } else if (CompanyID > 0) {
         auto node = company_by_id.find(CompanyID);
-        if (!node) throw EmFailure();
+        if (!node) {
+            throw EmFailure();
+        }
         Company *comp = node->obj;
         *Employees = (int *) std::malloc(comp->getSize() * sizeof(int));
         if (!Employees) throw EmAllocationError();
-        comp->printToList(Employees);
+        comp->printToList(Employees, comp->getSize());
         *NumOfEmployees = comp->getSize();
     }
 }

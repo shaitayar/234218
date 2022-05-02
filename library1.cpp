@@ -25,11 +25,11 @@ StatusType AddCompany(void *DS, int CompanyID, int Value) {
     try {
         ((EmployeeManager *) DS)->AddCompany(CompanyID, Value);
     }
-    catch (const EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
+    }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
     }
     return SUCCESS;
 }
@@ -45,17 +45,16 @@ StatusType AddCompany(void *DS, int CompanyID, int Value) {
  * @return StatusType
  */
 StatusType AddEmployee(void *DS, int EmployeeID, int CompanyID, int Salary, int Grade) {
-    if (DS == NULL || EmployeeID <= 0 || CompanyID <= 0 || Grade < 0) return INVALID_INPUT;
+    if (DS == NULL || EmployeeID <= 0 || CompanyID <= 0 || Salary<=0 || Grade < 0) return INVALID_INPUT;
     try {
         ((EmployeeManager *) DS)->AddEmployee(EmployeeID, CompanyID, Salary, Grade);
-    }
-    catch (EmployeeManager::EmFailure &e) {
-        return FAILURE;
     }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
-
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
 
 }
@@ -65,13 +64,14 @@ StatusType RemoveCompany(void *DS, int CompanyID) {
     try {
         ((EmployeeManager *) DS)->RemoveCompany(CompanyID);
     }
-    catch (const EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
+
 }
 
 /***
@@ -86,13 +86,12 @@ StatusType RemoveEmployee(void *DS, int EmployeeID) {
     try {
         ((EmployeeManager *) DS)->RemoveEmployee(EmployeeID);
     }
-    catch (EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
-
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
 }
 
@@ -102,13 +101,14 @@ StatusType GetCompanyInfo(void *DS, int CompanyID, int *Value, int *NumEmployees
     try {
         ((EmployeeManager *) DS)->GetCompanyInfo(CompanyID, Value, NumEmployees);
     }
-    catch (const EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
+
 }
 
 
@@ -117,10 +117,14 @@ StatusType GetEmployeeInfo(void *DS, int EmployeeID, int *EmployerID, int *Salar
     try {
         ((EmployeeManager *) DS)->GetEmployeeInfo(EmployeeID, EmployerID, Salary, Grade);
     }
+    catch (EmployeeManager::EmAllocationError &e) {
+        return ALLOCATION_ERROR;
+    }
     catch (EmployeeManager::EmFailure &e) {
         return FAILURE;
     }
     return SUCCESS;
+
 }
 
 
@@ -129,19 +133,23 @@ StatusType IncreaseCompanyValue(void *DS, int CompanyID, int ValueIncrease) {
     try {
         ((EmployeeManager *) DS)->IncreaseCompanyValue(CompanyID, ValueIncrease);
     }
-    catch (const EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
+
 }
 
 StatusType PromoteEmployee(void *DS, int EmployeeID, int SalaryIncrease, int BumpGrade) {
     if (DS == NULL || EmployeeID <= 0 || SalaryIncrease <= 0) return INVALID_INPUT;
     try {
         ((EmployeeManager *) DS)->PromoteEmployee(EmployeeID, SalaryIncrease, BumpGrade);
+    }
+    catch (EmployeeManager::EmAllocationError &e) {
+        return ALLOCATION_ERROR;
     }
     catch (EmployeeManager::EmFailure &e) {
         return FAILURE;
@@ -155,26 +163,31 @@ StatusType HireEmployee(void *DS, int EmployeeID, int NewCompanyID) {
     try {
         ((EmployeeManager *) DS)->HireEmployee(EmployeeID, NewCompanyID);
     }
+    catch (EmployeeManager::EmAllocationError &e) {
+        return ALLOCATION_ERROR;
+    }
     catch (EmployeeManager::EmFailure &e) {
         return FAILURE;
     }
     return SUCCESS;
+
 }
 
 
 StatusType AcquireCompany(void *DS, int AcquirerID, int TargetID, double Factor) {
-    if (DS == NULL || AcquirerID <= 0 || TargetID <= 0 || Factor <= 1.00 || TargetID == AcquirerID)
+    if (DS == NULL || AcquirerID <= 0 || TargetID <= 0 || Factor < 1.00 || TargetID == AcquirerID)
         return INVALID_INPUT;
     try {
         ((EmployeeManager *) DS)->AcquireCompany(AcquirerID, TargetID, Factor);
     }
-    catch (const EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
+
 }
 
 StatusType GetHighestEarner(void *DS, int CompanyID, int *EmployeeID) {
@@ -182,13 +195,14 @@ StatusType GetHighestEarner(void *DS, int CompanyID, int *EmployeeID) {
     try {
         ((EmployeeManager *) DS)->GetHighestEarner(CompanyID, EmployeeID);
     }
-    catch (const EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
+
 }
 
 StatusType GetAllEmployeesBySalary(void *DS, int CompanyID, int **Employees, int *NumOfEmployees) {
@@ -196,13 +210,14 @@ StatusType GetAllEmployeesBySalary(void *DS, int CompanyID, int **Employees, int
     try {
         ((EmployeeManager *) DS)->GetAllEmployeesBySalary(CompanyID, Employees, NumOfEmployees);
     }
-    catch (EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
+
 }
 
 
@@ -211,28 +226,33 @@ StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Emp
     try {
         ((EmployeeManager *) DS)->GetHighestEarnerInEachCompany(NumOfCompanies, Employees);
     }
-    catch (EmployeeManager::EmFailure &e) {
-        return FAILURE;
-    }
     catch (EmployeeManager::EmAllocationError &e) {
         return ALLOCATION_ERROR;
     }
+    catch (EmployeeManager::EmFailure &e) {
+        return FAILURE;
+    }
     return SUCCESS;
+
 }
 
 StatusType GetNumEmployeesMatching(void *DS, int CompanyID, int MinEmployeeID, int MaxEmployeeId,
                                    int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees) {
-    if (DS == NULL || CompanyID == 0 || MinEmployeeID == MaxEmployeeId || MinSalary < 0 ||
+    if (DS == NULL || CompanyID == 0 || MinEmployeeID > MaxEmployeeId || MinSalary < 0 ||
         MaxEmployeeId < 0 || MinEmployeeID < 0 || MinGrade < 0 || NumOfEmployees == NULL || TotalNumOfEmployees == NULL)
         return INVALID_INPUT;
     try {
         ((EmployeeManager *) DS)->GetNumEmployeesMatching(CompanyID, MinEmployeeID, MaxEmployeeId, MinSalary, MinGrade,
                                                           TotalNumOfEmployees, NumOfEmployees);
     }
+    catch (EmployeeManager::EmAllocationError &e) {
+        return ALLOCATION_ERROR;
+    }
     catch (EmployeeManager::EmFailure &e) {
         return FAILURE;
     }
     return SUCCESS;
+
 }
 
 void Quit(void **DS){

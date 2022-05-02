@@ -156,13 +156,19 @@ static OnFuncPtr OnCmdPtrs[] = {
 
 int main(int argc, const char**argv) {
     char buffer[MAX_STRING_INPUT_SIZE];
-
+    int i=0;
     // Reading commands
     while (fgets(buffer, MAX_STRING_INPUT_SIZE, stdin) != NULL) {
+        i++;
+        if (i==213){
+            int blabla=0;
+        }
         fflush(stdout);
+
         if (parser(buffer) == error)
             break;
     };
+
     return 0;
 }
 

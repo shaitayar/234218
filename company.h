@@ -40,7 +40,9 @@ public:
 
     void RemoveEmployee(Employee * employee, bool is_obj);
 
-    void printToList(int ** arr);
+    void promote(Employee * employee);
+
+    void printToList(int ** arr, int size);
 
     void print() const{
         c_employee_by_id.print();
@@ -53,6 +55,7 @@ public:
     void ArrayToTree(Employee ** combinedID, Employee ** combinedSalary, int size);
 
     void emptyCompany();
+
 };
 
 class CompCompanyById {

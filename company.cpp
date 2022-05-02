@@ -42,8 +42,14 @@ void Company::RemoveEmployee(Employee * employee, bool is_obj)
 
 }
 
-void Company::printToList(int ** arr){
-    c_employee_by_salary.printToList(arr);
+void Company::promote(Employee * employee){
+    this->c_employee_by_salary.deleteNode(employee,false);
+    this->c_employee_by_salary.insert(employee);
+    max_sal_emp = c_employee_by_salary.getMaxNode();
+}
+
+void Company::printToList(int ** arr, int size){
+    c_employee_by_salary.printToList(arr, size);
 }
 
 void Company::getMatchCompany(int MinEmployeeID, int MaxEmployeeId, int MinSalary,
@@ -71,3 +77,4 @@ void Company::emptyCompany(){
     c_employee_by_salary.DestroyTree(false);
     size=0;
 }
+
