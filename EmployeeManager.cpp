@@ -40,12 +40,13 @@ void EmployeeManager::RemoveEmployee(int EmployeeID) {
     if (!node) throw EmFailure();
     Employee *employee = node->obj;
     Company *company = employee->getCompany();
-    employee_by_id.deleteNode(node->obj,false);
-    employee_by_salary.deleteNode(node->obj, false);
-    company->RemoveEmployee(node->obj, true);
+    employee_by_id.deleteNode(employee,false);
+    employee_by_salary.deleteNode(employee, false);
+    company->RemoveEmployee(employee, true);
 
     max_employee = employee_by_salary.getMaxNode();
     if (company->getSize() == 0) company_not_empty.deleteNode(company,false);
+    employee_num--;
 }
 
 void EmployeeManager::RemoveCompany(int CompanyID) {
@@ -267,7 +268,7 @@ void EmployeeManager::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, 
         if (!node) throw EmFailure();
         Company *company = node->obj;
         if (company->getSize() == 0) {
-            return;
+            throw EmFailure();
         } else {
             company->getMatchCompany(MinEmployeeID, MaxEmployeeId, MinSalary,
                                      MinGrade, TotalNumOfEmployees, NumOfEmployees);

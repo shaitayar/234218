@@ -90,7 +90,9 @@ template<class T, class L>
 int getNMaxAux(Node<T, L> *root, int **Employees, int n, int counter) {
     if (root == NULL || counter >= n) return counter;
     counter = getNMaxAux(root->left_son, Employees, n, counter);
-    (*Employees)[counter++] = root->obj->getMax();
+    if(counter<n){
+        (*Employees)[counter++] = root->obj->getMax();
+    }
     counter = getNMaxAux(root->right_son, Employees, n, counter);
     return counter;
 }
@@ -199,17 +201,20 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
     }
         //find the Node to delete
     else {
+
+
+        /***
         //node has one or zero sons
         if (!node->left_son || !node->right_son) {
             //has left
             if (node->left_son) {
                 Node<T, L> *temp = node->left_son;
                 node->obj = temp->obj;
-                /**not necessary*/
                 node->left_son = temp->left_son;
                 node->right_son = temp->right_son;
-                if (is_obj) delete temp->obj;
-                delete temp;
+                temp->father = node->father;
+                if (is_obj) delete node->obj;
+                delete node;
 
             }
                 //has right
@@ -217,11 +222,12 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
 
                 Node<T, L> *temp = node->right_son;
                 node->obj = temp->obj;
-                /**not necessary*/
                 node->left_son = temp->left_son;
                 node->right_son = temp->right_son;
+                temp->father = node->father;
+
                 if (is_obj) delete temp->obj;
-                delete temp;
+                delete node;
 
             }
                 //no sons
@@ -230,10 +236,30 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
                 temp = node;
                 node = NULL;
                 if (is_obj) delete temp->obj;
-                delete temp;
+                delete node;
             }
         }
-            //node has two sons
+         **/
+         if (!node->left_son || !node->right_son){
+             //node has one or no sons
+             Node<T,L> * temp = node->right_son ? node->right_son : node->left_son;
+             T* t_obj = node->obj;
+             //no sons
+             if (!temp){
+                 temp = node;
+                 node = NULL;
+             }
+             else{
+                 node->obj = temp->obj;
+                 node->right_son = temp->right_son;
+                 node->left_son = temp->left_son;
+             }
+             delete temp;
+             if (is_obj) {
+                 delete t_obj;
+             }
+         }
+         //node has two sons
         else {
             //o(log (current node height))
             Node<T, L> *temp = find_minimal(node->right_son);
@@ -242,6 +268,7 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
             node->right_son = RemoveNode(node->right_son, node->obj, false);
         }
     }
+
     if (node == NULL) return node;
     node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
     return balance(node);
@@ -375,7 +402,9 @@ template<class T, class L>
 int inorder_back(Node<T, L> *p, int **keys, int index, int size) {
     if (p == NULL || index >=size) return index;
     index = inorder_back(p->right_son, keys, index, size);
-    (*keys)[index++] = p->obj->getID();
+    if (index<size){
+        (*keys)[index++] = p->obj->getID();
+    }
     index = inorder_back(p->left_son, keys, index, size);
 
     return index;
