@@ -20,19 +20,20 @@ void EmployeeManager::AddCompany(int CompanyID, int Value) {
 
 void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade) {
     Node<Company, CompCompanyById> *c = company_by_id.find(CompanyID);
+    Company * comp = c->obj;
     if (!c) throw EmFailure();
 
     if (employee_by_id.find(EmployeeID) != NULL) {
         throw EmFailure();
     }
-    Employee *employee = new Employee(EmployeeID, Salary, Grade, (c->obj));
+    Employee *employee = new Employee(EmployeeID, Salary, Grade, comp);
     if (!employee) throw EmAllocationError();
     employee_by_id.insert(employee);
     employee_by_salary.insert(employee);
-    (c->obj)->addEmployee(employee);
+    comp->addEmployee(employee);
     employee_num++;
     max_employee = employee_by_salary.getMaxNode();
-    company_not_empty.insert(c->obj);
+    company_not_empty.insert(comp);
 }
 
 void EmployeeManager::RemoveEmployee(int EmployeeID) {
@@ -154,12 +155,14 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     auto acquirer = company_by_id.find(AcquirerID);
     auto target = company_by_id.find(TargetID);
     if (!acquirer || !target) throw EmFailure();
-    int target_value = target->obj->getValue();
-    int acquirer_value = acquirer->obj->getValue();
+    Company * c_target = target->obj;
+    Company * c_acquirer = acquirer->obj;
+    int target_value = c_target->getValue();
+    int acquirer_value = c_acquirer->getValue();
     if (acquirer_value < target_value * 10) throw EmFailure();
     int new_value = (acquirer_value + target_value) * Factor;
-    int tsize = target->obj->getSize();
-    int asize = acquirer->obj->getSize();
+    int tsize = c_target->getSize();
+    int asize = c_acquirer->getSize();
 
     Company *new_company = new Company(AcquirerID, new_value);
     if (!new_company) throw EmAllocationError();
@@ -182,8 +185,8 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
         throw EmAllocationError();
     }
 
-    (target->obj)->TreeToArray(empByIDTarget, empBySalaryTarget);
-    (acquirer->obj)->TreeToArray(empByIDAcq, empBySalaryAcq);
+    c_target->TreeToArray(empByIDTarget, empBySalaryTarget);
+    c_acquirer->TreeToArray(empByIDAcq, empBySalaryAcq);
 
     CompEmployeeById ci;
     CompEmployeeBySalary cs;
@@ -194,10 +197,10 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
 
     new_company->ArrayToTree(combinedID, combinedSalary, tsize+asize);
 
-    target->obj->emptyCompany();
-    acquirer->obj->emptyCompany();
-    company_not_empty.deleteNode(target->obj, false);
-    company_not_empty.deleteNode(acquirer->obj,false);
+    c_target->emptyCompany();
+    c_acquirer->emptyCompany();
+    company_not_empty.deleteNode(c_target, false);
+    company_not_empty.deleteNode(c_acquirer,false);
 
     this->RemoveCompany(TargetID) ;
     this->RemoveCompany(AcquirerID) ;
