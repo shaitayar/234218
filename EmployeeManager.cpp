@@ -33,7 +33,9 @@ void EmployeeManager::AddEmployee(int EmployeeID, int CompanyID, int Salary, int
     comp->addEmployee(employee);
     employee_num++;
     max_employee = employee_by_salary.getMaxNode();
-    company_not_empty.insert(comp);
+    if (company_not_empty.find(CompanyID)==NULL){
+        company_not_empty.insert(comp);
+    }
 }
 
 void EmployeeManager::RemoveEmployee(int EmployeeID) {
@@ -196,7 +198,6 @@ void EmployeeManager::AcquireCompany(int AcquirerID, int TargetID, double Factor
     update_company(combinedID,tsize+asize, new_company);
 
     new_company->ArrayToTree(combinedID, combinedSalary, tsize+asize);
-
     c_target->emptyCompany();
     c_acquirer->emptyCompany();
     company_not_empty.deleteNode(c_target, false);

@@ -65,7 +65,7 @@ public:
 
     void print() const;
 
-    void printToList(int **, int size) const;
+    void printToList(int **, int sizet) const;
 
     void inorder(Node<T, L> *) const;
 
@@ -79,7 +79,7 @@ public:
 
     void treeToArr(T **arr);
 
-    void arrToTree(T **arr, int size);
+    void arrToTree(T **arr, int sizet);
 
     Node<T,L>* buildEmptyTree(int height_neede, Node<T,L> * parent);
 
@@ -163,14 +163,13 @@ template<class T, class L>
 void AvlTree<T, L>::insert(T *obj) {
     bool is_success = false;
     root = addNode(root, obj, &is_success);
-    if (is_success) size++;
+    size++;
 }
 
 template<class T, class L>
 void AvlTree<T, L>::deleteNode(T *data, bool is_obj) {
 
     if (!data) return;
-
     root = RemoveNode(root, data, is_obj);
     size--;
 }
@@ -201,45 +200,6 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
     }
         //find the Node to delete
     else {
-
-
-        /***
-        //node has one or zero sons
-        if (!node->left_son || !node->right_son) {
-            //has left
-            if (node->left_son) {
-                Node<T, L> *temp = node->left_son;
-                node->obj = temp->obj;
-                node->left_son = temp->left_son;
-                node->right_son = temp->right_son;
-                temp->father = node->father;
-                if (is_obj) delete node->obj;
-                delete node;
-
-            }
-                //has right
-            else if (node->right_son) {
-
-                Node<T, L> *temp = node->right_son;
-                node->obj = temp->obj;
-                node->left_son = temp->left_son;
-                node->right_son = temp->right_son;
-                temp->father = node->father;
-
-                if (is_obj) delete temp->obj;
-                delete node;
-
-            }
-                //no sons
-            else {
-                Node<T, L> *temp;
-                temp = node;
-                node = NULL;
-                if (is_obj) delete temp->obj;
-                delete node;
-            }
-        }
-         **/
          if (!node->left_son || !node->right_son){
              //node has one or no sons
              Node<T,L> * temp = node->right_son ? node->right_son : node->left_son;
@@ -416,8 +376,8 @@ void AvlTree<T, L>::print() const {
 }
 
 template<class T, class L>
-void AvlTree<T, L>::printToList(int **keys, int size) const {
-    inorder_back(root, keys, 0, size);
+void AvlTree<T, L>::printToList(int **keys, int sizet) const {
+    inorder_back(root, keys, 0, sizet);
 }
 
 
@@ -480,23 +440,7 @@ template<class T, class L>
 void AvlTree<T, L>::treeToArr(T **arr) {
     treeToArrAUX(root, arr, 0);
 }
-/*
-template<class T, class L>
-Node<T, L> *arrToTreeAux(T **arr, int start, int end, int h) {
-    if (start > end) {
-        return NULL;
-    }
-    int mid = (start + end) / 2;
-    Node<T, L> *root = createNode<T, L>(arr[mid]);
-    root->father = NULL;
-    root->left_son = arrToTreeAux<T, L>(arr, start, mid -1, h++);
-    if (root->left_son) root->left_son->father = root;
-    root->right_son = arrToTreeAux<T, L>(arr, mid + 1, end, h++);
-    if (root->right_son) root->right_son->father = root;
-    root->height = h;
-    return root;
-}
-*/
+
 
 template <class T, class L>
 Node<T,L>* AvlTree<T, L>::buildEmptyTree(int height_needed, Node<T,L> * parent){
@@ -523,22 +467,38 @@ int inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove){
 }
 
 template<class T, class L>
-int inorderFillTree(Node<T,L> * node, T** arr, int size, int index){
-    if (node==NULL ||index==size) return index;
-    index = inorderFillTree(node->left_son,arr,size, index);
+int inorderFillTree(Node<T,L> * node, T** arr, int sizet, int index){
+    if (node==NULL ||index>=sizet) return index;
+    index = inorderFillTree(node->left_son,arr,sizet, index);
     node->obj= arr[index++];
-    index = inorderFillTree(node->right_son, arr, size, index);
+    index = inorderFillTree(node->right_son, arr, sizet, index);
     return index;
 }
 
 template<class T, class L>
-void AvlTree<T, L>::arrToTree(T **arr, int size) {
-    int height_needed = ceil( log2(size));
-    int current_nodes = pow(2,height_needed);
-    int nodes_to_remove = current_nodes-size-1;
+void AvlTree<T, L>::arrToTree(T **arr, int sizet) {
+    int height_needed = 0;
+    int current_nodes = 0;
+    int nodes_to_remove = 0;
+
+    if (sizet==0) return;
+    else if (sizet==1){
+        height_needed=1;
+        nodes_to_remove=0;
+    }
+    else if (sizet==2){
+        height_needed=2;
+        nodes_to_remove=1;
+    }
+    else {
+        height_needed = ceil(log2(sizet));
+        current_nodes = pow(2, height_needed);
+        nodes_to_remove = current_nodes - sizet - 1;
+    }
     root = buildEmptyTree(height_needed, NULL);
     inorderBackRemoveExtra(root, nodes_to_remove);
-    inorderFillTree(root, arr,size,0);
+    inorderFillTree(root, arr,sizet,0);
+    this->size = sizet;
 }
 
 #endif
