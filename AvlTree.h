@@ -36,6 +36,7 @@ class AvlTree {
 
     Node<T, L> *balance(Node<T, L> *node);
 
+    int inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove);
 
 public:
 
@@ -411,6 +412,7 @@ void DestroyTreeAux(Node<T, L> *node, bool is_obj) {
 template<class T, class L>
 void AvlTree<T, L>::DestroyTree(bool is_obj) {
     DestroyTreeAux(root, is_obj);
+    this->root = NULL;
 }
 
 template<class T, class L>
@@ -471,7 +473,7 @@ Node<T,L>* AvlTree<T, L>::buildEmptyTree(int height_needed, Node<T,L> * parent){
     return node;
 }
 template <class T, class L>
-int inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove){
+int AvlTree<T,L>::inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove){
     if (node==NULL || nodes_to_remove<=0) return nodes_to_remove;
     nodes_to_remove = inorderBackRemoveExtra(node->right_son, nodes_to_remove);
     nodes_to_remove= inorderBackRemoveExtra(node->left_son, nodes_to_remove);
@@ -482,6 +484,7 @@ int inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove){
         node=NULL;
         return nodes_to_remove-1;
     }
+    node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
     return nodes_to_remove;
 }
 
@@ -510,7 +513,7 @@ void AvlTree<T, L>::arrToTree(T **arr, int sizet) {
         nodes_to_remove=1;
     }
     else {
-        height_needed = ceil(log2(sizet));
+        height_needed = ceil(log2(sizet+1));
         current_nodes = pow(2, height_needed);
         nodes_to_remove = current_nodes - sizet - 1;
     }

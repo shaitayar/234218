@@ -78,14 +78,16 @@ void EmployeeManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, int Bu
     auto node = employee_by_id.find(EmployeeID);
     if (!node) throw EmFailure();
     Employee *emp = node->obj;
+    Company *company = emp->getCompany();
+    company->RemoveEmployee(emp, false);
+
     employee_by_salary.deleteNode(emp,false);
     emp->setSalary(SalaryIncrease);
     employee_by_salary.insert(emp);
+    company->addEmployee(emp);
     if (BumpGrade > 0) {
         emp->setGrade();
     }
-    Company *company = emp->getCompany();
-    company->promote(emp);
 
     max_employee = employee_by_salary.getMaxNode();
 }
@@ -104,6 +106,9 @@ void EmployeeManager::HireEmployee(int EmployeeID, int NewCompanyID) {
     emp->setCompany(company2);
     company1->RemoveEmployee(emp,false);
     company2->addEmployee(emp);
+    if (company2->getSize()==1){
+        company_not_empty.insert(company2);
+    }
 }
 
 
