@@ -283,8 +283,10 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     if (r->father) {
         if ((r->father)->left_son == r) {
             r->father->left_son = pb;
+            pb->father = r->father;
         } else {
             r->father->right_son = pb;
+            pb->father = r->father;
         }
     }
     pb->right_son = r;
@@ -309,8 +311,10 @@ Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
     if (r->father) {
         if (r->father->left_son == r) {
             r->father->left_son = pb;
+            pb->father = r->father;
         } else {
             r->father->right_son = pb;
+            pb->father = r->father;
         }
     }
     pb->left_son = r;
