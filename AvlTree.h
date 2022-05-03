@@ -217,13 +217,17 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
              delete temp;
              if (is_obj) {
                  delete t_obj;
+                 t_obj=NULL;
              }
          }
          //node has two sons
         else {
             //o(log (current node height))
             Node<T, L> *temp = find_minimal(node->right_son);
-            if (is_obj)delete node->obj;
+            if (is_obj) {
+                delete node->obj;
+                node->obj=NULL;
+            }
             node->obj = temp->obj;
             node->right_son = RemoveNode(node->right_son, node->obj, false);
         }
@@ -291,6 +295,10 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     }
     pb->right_son = r;
     this->root = pb;
+    if (r->father==NULL){
+        root->father = NULL;
+    }
+
     r->left_son = pc;
     r->father = pb;
     if(pc) pc->father = r;
@@ -298,7 +306,6 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     //update height
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
     pb->height = max(calcHeight(pb->left_son), calcHeight(pb->right_son)) + 1;
-    root->father = NULL;
 
     return root;
 }
@@ -319,6 +326,9 @@ Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
     }
     pb->left_son = r;
     this->root = pb;
+    if (r->father==NULL){
+        root->father = NULL;
+    }
     r->right_son = pc;
     r->father = pb;
     if(pc) pc->father = r;
@@ -327,7 +337,7 @@ Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
     //update height
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
     pb->height = max(calcHeight(pb->left_son), calcHeight(pb->right_son)) + 1;
-    root->father = NULL;
+    //root->father = NULL;
     return root;
 }
 
@@ -388,10 +398,14 @@ void AvlTree<T, L>::printToList(int **keys, int sizet) const {
 template<class T, class L>
 void DestroyTreeAux(Node<T, L> *node, bool is_obj) {
     if (!node) return;
-    DestroyTreeAux(node->right_son, is_obj);
     DestroyTreeAux(node->left_son, is_obj);
-    if (is_obj) delete node->obj;
+    DestroyTreeAux(node->right_son, is_obj);
+    if (is_obj) {
+        delete node->obj;
+        node->obj=NULL;
+    }
     delete node;
+    node=NULL;
 }
 
 template<class T, class L>
@@ -465,6 +479,7 @@ int inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove){
         if (node->father->left_son ==node) node->father->left_son = NULL;
         else if(node->father->right_son ==node) node->father->right_son = NULL;
         delete node;
+        node=NULL;
         return nodes_to_remove-1;
     }
     return nodes_to_remove;

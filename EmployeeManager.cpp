@@ -225,6 +225,7 @@ void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID) {
         auto node = company_by_id.find(CompanyID);
         if (!node) throw EmFailure();
         Company *comp = node->obj;
+        if (comp->getSize()==0) throw EmFailure();
         *EmployeeID = comp->getMax();
     }
 }
