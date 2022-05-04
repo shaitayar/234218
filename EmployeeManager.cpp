@@ -59,7 +59,7 @@ void EmployeeManager::RemoveCompany(int CompanyID) {
 
     //If company has workers
     if (company->getSize() != 0) throw EmFailure();
-    company_by_id.deleteNode(company,false);
+    company_by_id.deleteNode(company,true);
     company_num--;
 }
 
