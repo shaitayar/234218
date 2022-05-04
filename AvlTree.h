@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <math.h>
+
 using std::ostream;
 using std::max;
 /*
@@ -36,7 +37,7 @@ class AvlTree {
 
     Node<T, L> *balance(Node<T, L> *node);
 
-    int inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove);
+    int inorderBackRemoveExtra(Node<T, L> *node, int nodes_to_remove);
 
 public:
 
@@ -82,16 +83,16 @@ public:
 
     void arrToTree(T **arr, int sizet);
 
-    Node<T,L>* buildEmptyTree(int height_neede, Node<T,L> * parent);
+    Node<T, L> *buildEmptyTree(int height_neede, Node<T, L> *parent);
 
-    };
+};
 
 /*** AVL Implementation */
 template<class T, class L>
 int getNMaxAux(Node<T, L> *root, int **Employees, int n, int counter) {
     if (root == NULL || counter >= n) return counter;
     counter = getNMaxAux(root->left_son, Employees, n, counter);
-    if(counter<n){
+    if (counter < n) {
         (*Employees)[counter++] = root->obj->getMax();
     }
     counter = getNMaxAux(root->right_son, Employees, n, counter);
@@ -201,33 +202,32 @@ Node<T, L> *AvlTree<T, L>::RemoveNode(Node<T, L> *node, T *data, bool is_obj) {
     }
         //find the Node to delete
     else {
-         if (!node->left_son || !node->right_son){
-             //node has one or no sons
-             Node<T,L> * temp = node->right_son ? node->right_son : node->left_son;
-             T* t_obj = node->obj;
-             //no sons
-             if (!temp){
-                 temp = node;
-                 node = NULL;
-             }
-             else{
-                 node->obj = temp->obj;
-                 node->right_son = temp->right_son;
-                 node->left_son = temp->left_son;
-             }
-             delete temp;
-             if (is_obj) {
-                 delete t_obj;
-                 t_obj=NULL;
-             }
-         }
-         //node has two sons
+        if (!node->left_son || !node->right_son) {
+            //node has one or no sons
+            Node<T, L> *temp = node->right_son ? node->right_son : node->left_son;
+            T *t_obj = node->obj;
+            //no sons
+            if (!temp) {
+                temp = node;
+                node = NULL;
+            } else {
+                node->obj = temp->obj;
+                node->right_son = temp->right_son;
+                node->left_son = temp->left_son;
+            }
+            delete temp;
+            if (is_obj) {
+                delete t_obj;
+                t_obj = NULL;
+            }
+        }
+            //node has two sons
         else {
             //o(log (current node height))
             Node<T, L> *temp = find_minimal(node->right_son);
             if (is_obj) {
                 delete node->obj;
-                node->obj=NULL;
+                node->obj = NULL;
             }
             node->obj = temp->obj;
             node->right_son = RemoveNode(node->right_son, node->obj, false);
@@ -296,13 +296,13 @@ Node<T, L> *AvlTree<T, L>::RightRotate(Node<T, L> *r) {
     }
     pb->right_son = r;
     this->root = pb;
-    if (r->father==NULL){
+    if (r->father == NULL) {
         root->father = NULL;
     }
 
     r->left_son = pc;
     r->father = pb;
-    if(pc) pc->father = r;
+    if (pc) pc->father = r;
 
     //update height
     r->height = max(calcHeight(r->left_son), calcHeight(r->right_son)) + 1;
@@ -327,12 +327,12 @@ Node<T, L> *AvlTree<T, L>::LeftRotate(Node<T, L> *r) {
     }
     pb->left_son = r;
     this->root = pb;
-    if (r->father==NULL){
+    if (r->father == NULL) {
         root->father = NULL;
     }
     r->right_son = pc;
     r->father = pb;
-    if(pc) pc->father = r;
+    if (pc) pc->father = r;
 
 
     //update height
@@ -375,9 +375,9 @@ void AvlTree<T, L>::inorder(Node<T, L> *p) const {
 
 template<class T, class L>
 int inorder_back(Node<T, L> *p, int **keys, int index, int size) {
-    if (p == NULL || index >=size) return index;
+    if (p == NULL || index >= size) return index;
     index = inorder_back(p->right_son, keys, index, size);
-    if (index<size){
+    if (index < size) {
         (*keys)[index++] = p->obj->getID();
     }
     index = inorder_back(p->left_son, keys, index, size);
@@ -403,10 +403,10 @@ void DestroyTreeAux(Node<T, L> *node, bool is_obj) {
     DestroyTreeAux(node->right_son, is_obj);
     if (is_obj) {
         delete node->obj;
-        node->obj=NULL;
+        node->obj = NULL;
     }
     delete node;
-    node=NULL;
+    node = NULL;
 }
 
 template<class T, class L>
@@ -428,6 +428,29 @@ template<class T, class L>
 void inorderRange(Node<T, L> *node, int MinEmployeeID, int MaxEmployeeID, int MinSalary, int MinGrade,
                   int *TotalNumOfEmployees, int *NumOfEmployees) {
     if (node == NULL) return;
+
+    //search left
+    if (node->obj->getID() > MaxEmployeeID) {
+        inorderRange(node->left_son, MinEmployeeID, MaxEmployeeID, MinSalary, MinGrade, TotalNumOfEmployees,
+                     NumOfEmployees);
+    }
+    //search right
+    else if (node->obj->getID() < MinEmployeeID) {
+        inorderRange(node->right_son, MinEmployeeID, MaxEmployeeID, MinSalary, MinGrade, TotalNumOfEmployees,
+                     NumOfEmployees);
+    }
+
+    else if (node->obj->getID() >= MinEmployeeID && node->obj->getID() <= MaxEmployeeID ) {
+        *TotalNumOfEmployees += 1;
+        if (node->obj->getSalary() >= MinSalary && node->obj->getGrade() >= MinGrade) *NumOfEmployees += 1;
+        inorderRange(node->left_son, MinEmployeeID, MaxEmployeeID, MinSalary, MinGrade, TotalNumOfEmployees,
+                     NumOfEmployees);
+        inorderRange(node->right_son, MinEmployeeID, MaxEmployeeID, MinSalary, MinGrade, TotalNumOfEmployees,
+                     NumOfEmployees);
+
+    }
+    else return;
+    /*if (node == NULL) return;
     if (node->obj->getID() < MinEmployeeID) return;
     inorderRange(node->left_son, MinEmployeeID, MaxEmployeeID, MinSalary, MinGrade, TotalNumOfEmployees,
                  NumOfEmployees);
@@ -435,7 +458,7 @@ void inorderRange(Node<T, L> *node, int MinEmployeeID, int MaxEmployeeID, int Mi
     *TotalNumOfEmployees += 1;
     if (node->obj->getSalary() >= MinSalary && node->obj->getGrade() >= MinGrade) *NumOfEmployees += 1;
     inorderRange(node->right_son, MinEmployeeID, MaxEmployeeID, MinSalary, MinGrade, TotalNumOfEmployees,
-                 NumOfEmployees);
+                 NumOfEmployees);*/
 }
 
 
@@ -462,37 +485,38 @@ void AvlTree<T, L>::treeToArr(T **arr) {
 }
 
 
-template <class T, class L>
-Node<T,L>* AvlTree<T, L>::buildEmptyTree(int height_needed, Node<T,L> * parent){
-    if (height_needed<=0) return NULL;
-    auto node = new Node<T,L>();
-    node->height=height_needed-1;
-    node->father=parent;
-    node->left_son = buildEmptyTree(height_needed-1, node);
-    node->right_son = buildEmptyTree(height_needed-1, node);
+template<class T, class L>
+Node<T, L> *AvlTree<T, L>::buildEmptyTree(int height_needed, Node<T, L> *parent) {
+    if (height_needed <= 0) return NULL;
+    auto node = new Node<T, L>();
+    node->height = height_needed - 1;
+    node->father = parent;
+    node->left_son = buildEmptyTree(height_needed - 1, node);
+    node->right_son = buildEmptyTree(height_needed - 1, node);
     return node;
 }
-template <class T, class L>
-int AvlTree<T,L>::inorderBackRemoveExtra(Node<T,L> * node, int  nodes_to_remove){
-    if (node==NULL || nodes_to_remove<=0) return nodes_to_remove;
+
+template<class T, class L>
+int AvlTree<T, L>::inorderBackRemoveExtra(Node<T, L> *node, int nodes_to_remove) {
+    if (node == NULL || nodes_to_remove <= 0) return nodes_to_remove;
     nodes_to_remove = inorderBackRemoveExtra(node->right_son, nodes_to_remove);
-    nodes_to_remove= inorderBackRemoveExtra(node->left_son, nodes_to_remove);
-    if(node->height ==0) {
-        if (node->father->left_son ==node) node->father->left_son = NULL;
-        else if(node->father->right_son ==node) node->father->right_son = NULL;
+    nodes_to_remove = inorderBackRemoveExtra(node->left_son, nodes_to_remove);
+    if (node->height == 0) {
+        if (node->father->left_son == node) node->father->left_son = NULL;
+        else if (node->father->right_son == node) node->father->right_son = NULL;
         delete node;
-        node=NULL;
-        return nodes_to_remove-1;
+        node = NULL;
+        return nodes_to_remove - 1;
     }
     node->height = max(calcHeight(node->left_son), calcHeight(node->right_son)) + 1;
     return nodes_to_remove;
 }
 
 template<class T, class L>
-int inorderFillTree(Node<T,L> * node, T** arr, int sizet, int index){
-    if (node==NULL ||index>=sizet) return index;
-    index = inorderFillTree(node->left_son,arr,sizet, index);
-    node->obj= arr[index++];
+int inorderFillTree(Node<T, L> *node, T **arr, int sizet, int index) {
+    if (node == NULL || index >= sizet) return index;
+    index = inorderFillTree(node->left_son, arr, sizet, index);
+    node->obj = arr[index++];
     index = inorderFillTree(node->right_son, arr, sizet, index);
     return index;
 }
@@ -503,23 +527,21 @@ void AvlTree<T, L>::arrToTree(T **arr, int sizet) {
     int current_nodes = 0;
     int nodes_to_remove = 0;
 
-    if (sizet==0) return;
-    else if (sizet==1){
-        height_needed=1;
-        nodes_to_remove=0;
-    }
-    else if (sizet==2){
-        height_needed=2;
-        nodes_to_remove=1;
-    }
-    else {
-        height_needed = ceil(log2(sizet+1));
+    if (sizet == 0) return;
+    else if (sizet == 1) {
+        height_needed = 1;
+        nodes_to_remove = 0;
+    } else if (sizet == 2) {
+        height_needed = 2;
+        nodes_to_remove = 1;
+    } else {
+        height_needed = ceil(log2(sizet + 1));
         current_nodes = pow(2, height_needed);
         nodes_to_remove = current_nodes - sizet - 1;
     }
     root = buildEmptyTree(height_needed, NULL);
     inorderBackRemoveExtra(root, nodes_to_remove);
-    inorderFillTree(root, arr,sizet,0);
+    inorderFillTree(root, arr, sizet, 0);
     this->size = sizet;
 }
 

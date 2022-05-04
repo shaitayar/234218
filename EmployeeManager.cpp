@@ -109,6 +109,9 @@ void EmployeeManager::HireEmployee(int EmployeeID, int NewCompanyID) {
     if (company2->getSize()==1){
         company_not_empty.insert(company2);
     }
+    if (company1->getSize()==0){
+        company_not_empty.deleteNode(company1,false);
+    }
 }
 
 
@@ -237,6 +240,7 @@ void EmployeeManager::GetHighestEarner(int CompanyID, int *EmployeeID) {
 
 void EmployeeManager::GetAllEmployeesBySalary(int CompanyID, int **Employees, int *NumOfEmployees) {
     if (CompanyID < 0) {
+        if (employee_num ==0) throw EmFailure();
         *Employees = (int *) std::malloc(employee_num * sizeof(int));
         if (!Employees) throw EmAllocationError();
         employee_by_salary.printToList(Employees, employee_num);
@@ -247,6 +251,7 @@ void EmployeeManager::GetAllEmployeesBySalary(int CompanyID, int **Employees, in
             throw EmFailure();
         }
         Company *comp = node->obj;
+        if (comp->getSize()==0) throw EmFailure();
         *Employees = (int *) std::malloc(comp->getSize() * sizeof(int));
         if (!Employees) throw EmAllocationError();
         comp->printToList(Employees, comp->getSize());

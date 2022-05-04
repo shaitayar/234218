@@ -160,7 +160,7 @@ int main(int argc, const char**argv) {
     // Reading commands
     while (fgets(buffer, MAX_STRING_INPUT_SIZE, stdin) != NULL) {
         i++;
-        if (i==344){
+        if (i==2523){
             int blabla=0;
         }
         fflush(stdout);
